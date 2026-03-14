@@ -153,27 +153,27 @@ export default function Expenses() {
                 </div>
               </form>
             ) : (
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   {exp.billImageURL ? (
-                    <a href={exp.billImageURL} target="_blank" rel="noreferrer">
+                    <a href={exp.billImageURL} target="_blank" rel="noreferrer" className="flex-shrink-0">
                       <img src={exp.billImageURL} alt="bill" className="w-12 h-12 rounded-xl object-cover border border-gray-100 hover:opacity-80 transition-opacity" />
                     </a>
                   ) : (
-                    <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl">🧾</div>
+                    <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl flex-shrink-0">🧾</div>
                   )}
-                  <div>
-                    <p className="font-medium">{exp.materialName}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{exp.materialName}</p>
+                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${CAT_COLORS[exp.category]}`}>{exp.category}</span>
                       <span className="text-xs text-gray-400">{new Date(exp.date).toLocaleDateString('en-IN')}</span>
                     </div>
-                    {exp.notes && <p className="text-xs text-gray-400 mt-0.5">{exp.notes}</p>}
+                    {exp.notes && <p className="text-xs text-gray-400 mt-0.5 truncate">{exp.notes}</p>}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <p className="font-bold text-red-600 text-lg">₹{exp.amountSpent.toLocaleString('en-IN')}</p>
-                  <button className="text-gray-400 hover:text-orange-500 transition-colors text-sm font-medium" onClick={() => startEdit(exp)} aria-label="Edit">✏️</button>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <p className="font-bold text-red-600">₹{exp.amountSpent.toLocaleString('en-IN')}</p>
+                  <button className="text-gray-400 hover:text-orange-500 transition-colors" onClick={() => startEdit(exp)} aria-label="Edit">✏️</button>
                   <button className="text-gray-300 hover:text-red-400 transition-colors" onClick={() => deleteExpense(exp._id)} aria-label="Delete">✕</button>
                 </div>
               </div>

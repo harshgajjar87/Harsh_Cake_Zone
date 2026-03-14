@@ -211,29 +211,30 @@ export default function Orders() {
       )}
 
       {/* Date Filter + Sort */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-500 font-medium">📅 Filter by date:</label>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div className="flex items-center gap-2 flex-1">
+          <label className="text-sm text-gray-500 font-medium whitespace-nowrap">📅 Date:</label>
           <input
             type="date"
-            className="input"
-            style={{ width: 'auto' }}
+            className="input flex-1"
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
           />
           {filterDate && (
-            <button className="text-xs text-orange-500 hover:underline" onClick={() => setFilterDate('')}>
+            <button className="text-xs text-orange-500 hover:underline whitespace-nowrap" onClick={() => setFilterDate('')}>
               Clear
             </button>
           )}
         </div>
-        <button
-          className="btn-secondary text-xs flex items-center gap-1"
-          onClick={() => setSortDir(sortDir === 'desc' ? 'asc' : 'desc')}
-        >
-          {sortDir === 'desc' ? '↓ Newest First' : '↑ Oldest First'}
-        </button>
-        <span className="text-xs text-gray-400 ml-auto">{filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}</span>
+        <div className="flex items-center gap-2">
+          <button
+            className="btn-secondary text-xs flex items-center gap-1"
+            onClick={() => setSortDir(sortDir === 'desc' ? 'asc' : 'desc')}
+          >
+            {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
+          </button>
+          <span className="text-xs text-gray-400">{filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}</span>
+        </div>
       </div>
 
       {/* Orders grouped by date */}
@@ -257,24 +258,24 @@ export default function Orders() {
           <div className="space-y-3">
             {dayOrders.map((o) => (
               <div key={o._id} className="card hover:shadow-md transition-shadow">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div className="flex gap-3">
                     {o.cakeImageURL && (
-                      <img src={o.cakeImageURL} alt="cake" className="w-16 h-16 rounded-xl object-cover flex-shrink-0" />
+                      <img src={o.cakeImageURL} alt="cake" className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
                     )}
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold">{o.customerName}</h3>
                         <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
                         <span className="badge-ready">{o.orderStatus}</span>
                       </div>
-                      <p className="text-sm text-gray-500 mt-0.5">{o.cakeDetails}</p>
+                      <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}</p>
                       <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <p className="text-xl font-bold text-orange-600">₹{o.sellingPrice}</p>
-                    <div className="flex gap-2 flex-wrap justify-end">
+                <div className="flex flex-col gap-2">
+                    <p className="text-xl font-bold text-orange-600 sm:text-right">₹{o.sellingPrice}</p>
+                    <div className="flex flex-wrap gap-2">
                       {STATUS_FLOW.indexOf(o.orderStatus) < STATUS_FLOW.length - 1 && (
                         <button
                           className="btn-secondary text-xs"

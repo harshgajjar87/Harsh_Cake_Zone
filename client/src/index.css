@@ -6,8 +6,20 @@ body {
   background-color: #f9fafb;
   color: #111827;
   font-family: 'Inter', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s, color 0.2s;
 }
 
+.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Card ── */
 .card {
   background: white;
   border-radius: 1rem;
@@ -15,7 +27,13 @@ body {
   border: 1px solid #f3f4f6;
   padding: 1.5rem;
 }
+.dark .card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
 
+/* ── Buttons ── */
 .btn-primary {
   background-color: #f97316;
   color: white;
@@ -41,6 +59,13 @@ body {
 }
 .btn-secondary:hover { background-color: #e5e7eb; }
 
+.dark .btn-secondary {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+.dark .btn-secondary:hover { background-color: #475569; }
+
+/* ── Input ── */
 .input {
   width: 100%;
   border: 1px solid #e5e7eb;
@@ -49,9 +74,20 @@ body {
   font-size: 0.875rem;
   outline: none;
   transition: all 0.2s;
+  background: white;
+  color: #111827;
 }
 .input:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,0.2); }
 
+.dark .input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+.dark .input:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(251,146,60,0.15); }
+.dark .input::placeholder { color: #64748b; }
+
+/* ── Badges ── */
 .badge-paid {
   background-color: #dcfce7;
   color: #15803d;
@@ -59,6 +95,10 @@ body {
   font-weight: 600;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
+}
+.dark .badge-paid {
+  background-color: #14532d;
+  color: #86efac;
 }
 
 .badge-pending {
@@ -69,6 +109,10 @@ body {
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
 }
+.dark .badge-pending {
+  background-color: #713f12;
+  color: #fde68a;
+}
 
 .badge-ready {
   background-color: #dbeafe;
@@ -78,7 +122,12 @@ body {
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
 }
+.dark .badge-ready {
+  background-color: #1e3a5f;
+  color: #93c5fd;
+}
 
+/* ── Print ── */
 @media print {
   body * { visibility: hidden; }
   #receipt, #receipt * { visibility: visible; }
