@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useApp } from '../context/AppContext';
 import ConfirmModal from '../components/ConfirmModal';
+import { exportToExcel } from '../utils/exportUtils';
 
 const STATUS_FLOW = ['Received', 'In Progress', 'Ready', 'Delivered'];
 
@@ -154,6 +155,23 @@ export default function Orders() {
     load();
   };
 
+  const exportOrders = () => {
+    const cols = [
+      { header: 'Customer', key: 'customerName' },
+      { header: 'Phone', key: 'phone' },
+      { header: 'Cake Details', key: 'cakeDetails' },
+      { header: 'Amount (₹)', key: 'sellingPrice' },
+      { header: 'Order Date', key: 'orderDateFmt' },
+      { header: 'Order Status', key: 'orderStatus' },
+      { header: 'Payment', key: 'paymentStatus' },
+    ];
+    const rows = filteredOrders.map((o) => ({
+      ...o,
+      orderDateFmt: new Date(o.orderDate).toLocaleDateString('en-IN'),
+    }));
+    exportToExcel(rows, cols, 'Orders', `Orders_${filterDate || 'All'}`);
+  };
+
   const deleteOrder = async (id) => {
     await axios.delete(`/api/orders/${id}`);
     showToast('Order deleted');
@@ -229,6 +247,9 @@ export default function Orders() {
             {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
           </button>
           <span className="text-xs text-gray-400">{filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}</span>
+          <button className="btn-secondary text-xs" onClick={exportOrders} disabled={filteredOrders.length === 0}>
+            ⬇ Export Excel
+          </button>
         </div>
       </div>
 

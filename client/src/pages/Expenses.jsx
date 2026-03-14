@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useApp } from '../context/AppContext';
+import { exportToExcel } from '../utils/exportUtils';
 
 const CATEGORIES = ['Ingredients', 'Raw Materials', 'Packaging', 'Other'];
 const CAT_COLORS = {
@@ -83,6 +84,19 @@ export default function Expenses() {
   };
 
   const totalExpenses = expenses.reduce((s, e) => s + e.amountSpent, 0);
+
+  const exportExpenses = () => {
+    const cols = [
+      { header: 'Item', key: 'materialName' },
+      { header: 'Category', key: 'category' },
+      { header: 'Amount (₹)', key: 'amountSpent' },
+      { header: 'Date', key: 'dateFmt' },
+      { header: 'Notes', key: 'notes' },
+    ];
+    const rows = expenses.map((e) => ({ ...e, dateFmt: new Date(e.date).toLocaleDateString('en-IN') }));
+    const label = filterCat ? filterCat.replace(/\s/g, '_') : 'All';
+    exportToExcel(rows, cols, 'Expenses', `Expenses_${label}`);
+  };
   if (loading) return <div className="flex items-center justify-center h-64 text-gray-400">Loading...</div>;
 
   return (
@@ -131,7 +145,12 @@ export default function Expenses() {
       {/* Expense List */}
       <div className="flex items-center justify-between px-1">
         <p className="text-sm text-gray-500">{expenses.length} entries {filterCat && `· ${filterCat}`}</p>
-        <p className="font-bold text-red-600">Total: ₹{totalExpenses.toLocaleString('en-IN')}</p>
+        <div className="flex items-center gap-3">
+          <button className="btn-secondary text-xs" onClick={exportExpenses} disabled={expenses.length === 0}>
+            ⬇ Export Excel
+          </button>
+          <p className="font-bold text-red-600">Total: ₹{totalExpenses.toLocaleString('en-IN')}</p>
+        </div>
       </div>
 
       <div className="space-y-3">

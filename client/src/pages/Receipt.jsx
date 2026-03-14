@@ -33,7 +33,7 @@ export default function Receipt() {
         {/* Header */}
         <div className="text-center border-b border-dashed border-gray-200 pb-6 mb-6">
           <div className="text-4xl mb-2">🎂</div>
-          <h1 className="text-2xl font-bold text-orange-600">HarshCakes</h1>
+          <h1 className="text-2xl font-bold text-orange-600">Harsh Cake Zone</h1>
           <p className="text-xs text-gray-400 mt-1">Digital Receipt</p>
         </div>
 

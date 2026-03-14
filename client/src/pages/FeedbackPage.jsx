@@ -93,7 +93,7 @@ export default function FeedbackPage() {
               onChange={(e) => setWouldRecommend(e.target.checked)}
               className="w-4 h-4 accent-orange-500"
             />
-            <label htmlFor="recommend" className="text-sm text-gray-600">I would recommend HarshCakes to friends</label>
+            <label htmlFor="recommend" className="text-sm text-gray-600">I would recommend Harsh Cake Zone to friends</label>
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

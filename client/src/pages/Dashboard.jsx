@@ -4,28 +4,80 @@ import { Link } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import StatCard from '../components/StatCard';
 import { useApp } from '../context/AppContext';
+import { exportToPDF } from '../utils/exportUtils';
 
 export default function Dashboard() {
   const { fetchSummary } = useApp();
   const [summary, setSummary] = useState(null);
   const [trend, setTrend] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [s, t] = await Promise.all([
-          axios.get('/api/dashboard/summary'),
-          axios.get('/api/dashboard/trend'),
-        ]);
-        if (s.data.success) setSummary(s.data.data);
-        if (t.data.success) setTrend(t.data.data);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, [fetchSummary]);
+  const load = async (start = '', end = '') => {
+    setLoading(true);
+    try {
+      const params = start && end ? { startDate: start, endDate: end } : {};
+      const [s, t] = await Promise.all([
+        axios.get('/api/dashboard/summary', { params }),
+        axios.get('/api/dashboard/trend'),
+      ]);
+      if (s.data.success) setSummary(s.data.data);
+      if (t.data.success) setTrend(t.data.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, [fetchSummary]);
+
+  const handleFilter = () => { if (startDate && endDate) load(startDate, endDate); };
+  const handleClear = () => { setStartDate(''); setEndDate(''); load(); };
+
+  const exportDashboard = () => {
+    const fmt = (n) => `Rs.${(n || 0).toLocaleString('en-IN')}`;
+    const dateLabel = startDate && endDate ? `${startDate} to ${endDate}` : 'All Time';
+    const fileName = `Dashboard_${startDate || 'All'}_${endDate || 'Time'}`;
+
+    exportToPDF(
+      'Harsh Cake Zone - Financial Report',
+      `Period: ${dateLabel}  |  Generated: ${new Date().toLocaleDateString('en-IN')}`,
+      [
+        {
+          heading: 'Summary',
+          stats: [
+            { label: 'Total Revenue', value: fmt(summary?.totalRevenue) },
+            { label: 'Total Expenses', value: fmt(summary?.totalExpenses) },
+            { label: 'Net Profit', value: fmt(summary?.netProfit) },
+            { label: 'Profit Margin', value: `${summary?.profitMargin || 0}%` },
+            { label: 'Total Orders', value: summary?.totalOrders || 0 },
+            { label: 'Pending Orders', value: summary?.pendingOrders || 0 },
+          ],
+        },
+        {
+          heading: 'Monthly Trend',
+          columns: [
+            { header: 'Month', key: 'month' },
+            { header: 'Revenue (Rs.)', key: 'revenue' },
+            { header: 'Expenses (Rs.)', key: 'expenses' },
+            { header: 'Profit (Rs.)', key: 'profit' },
+          ],
+          rows: trend,
+        },
+        {
+          heading: 'Recent Orders',
+          columns: [
+            { header: 'Customer', key: 'customerName' },
+            { header: 'Cake', key: 'cakeDetails' },
+            { header: 'Amount (Rs.)', key: 'sellingPrice' },
+            { header: 'Payment', key: 'paymentStatus' },
+          ],
+          rows: summary?.recentOrders || [],
+        },
+      ],
+      fileName
+    );
+  };
 
   if (loading) return <div className="flex items-center justify-center h-64 text-gray-400">Loading...</div>;
 
@@ -45,9 +97,28 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Date Range Filter */}
+      <div className="card flex flex-col sm:flex-row sm:items-center gap-3">
+        <span className="text-sm text-gray-500 font-medium whitespace-nowrap">📅 Date Range:</span>
+        <input type="date" className="input flex-1" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <span className="text-sm text-gray-400">to</span>
+        <input type="date" className="input flex-1" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+        <button className="btn-primary text-sm whitespace-nowrap" onClick={handleFilter} disabled={!startDate || !endDate}>
+          Apply
+        </button>
+        {(startDate || endDate) && (
+          <button className="text-xs text-orange-500 hover:underline whitespace-nowrap" onClick={handleClear}>
+            Clear
+          </button>
+        )}
+        <button className="btn-secondary text-sm whitespace-nowrap" onClick={exportDashboard} disabled={!summary}>
+          ⬇ Export PDF
+        </button>
+      </div>
+
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total Revenue" value={fmt(summary?.totalRevenue)} icon="💰" color="green" sub="From paid orders" />
+        <StatCard label="Total Revenue" value={fmt(summary?.totalRevenue)} icon="💰" color="green" sub={startDate && endDate ? `${startDate} → ${endDate}` : 'From paid orders'} />
         <StatCard label="Total Expenses" value={fmt(summary?.totalExpenses)} icon="📦" color="red" sub="Materials & bills" />
         <StatCard
           label="Net Profit"

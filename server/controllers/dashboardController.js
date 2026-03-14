@@ -3,12 +3,18 @@ const Expense = require('../models/Expense');
 
 exports.getFinancialSummary = async (req, res) => {
   try {
-    const { month, year } = req.query;
+    const { month, year, startDate, endDate } = req.query;
     let orderFilter = { paymentStatus: 'Paid' };
     let expenseFilter = {};
 
-    // Optional month/year filter
-    if (month && year) {
+    // Date range filter takes priority
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      orderFilter.orderDate = { $gte: start, $lte: end };
+      expenseFilter.date = { $gte: start, $lte: end };
+    } else if (month && year) {
       const start = new Date(year, month - 1, 1);
       const end = new Date(year, month, 0, 23, 59, 59);
       orderFilter.orderDate = { $gte: start, $lte: end };
