@@ -18,7 +18,7 @@ export default function Navbar({ onLogout, dark, toggleTheme }) {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl">🎂</span>
-            <span className="font-bold text-xl text-orange-600">HarshCakes</span>
+            <span className="font-bold text-xl text-orange-600">Harsh Cake Zone</span>
             <span className="hidden sm:block text-xs text-gray-400 font-medium ml-1">Bakery Suite</span>
           </Link>
 
