@@ -1,6 +1,5 @@
 const crypto = require('crypto');
 const Order = require('../models/Order');
-const { generateWhatsAppLink } = require('../services/whatsappService');
 
 // GET all orders
 exports.getOrders = async (req, res) => {
@@ -67,15 +66,7 @@ exports.updateOrderStatus = async (req, res) => {
     if (reviewSent !== undefined) order.reviewSent = reviewSent;
     await order.save();
 
-    // Generate WhatsApp click-to-chat link when order becomes Ready
-    let whatsappLink = null;
-    if (orderStatus === 'Ready' && wasNotReady) {
-      const upiLink = generateUPILink(order.sellingPrice, order.customerName);
-      const receiptURL = `${process.env.FRONTEND_URL}/receipt/${order.receiptToken}`;
-      whatsappLink = generateWhatsAppLink(order.phone, order.customerName, order.sellingPrice, upiLink, receiptURL);
-    }
-
-    res.json({ success: true, data: order, whatsappLink });
+    res.json({ success: true, data: order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

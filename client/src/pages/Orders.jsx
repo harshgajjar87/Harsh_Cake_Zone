@@ -71,13 +71,8 @@ export default function Orders() {
 
   const updateStatus = async (id, orderStatus) => {
     try {
-      const { data } = await axios.patch(`/api/orders/${id}/status`, { orderStatus });
-      if (data.whatsappLink) {
-        window.open(data.whatsappLink, '_blank');
-        showToast('🎉 Order Ready — WhatsApp opened!');
-      } else {
-        showToast('Status updated');
-      }
+      await axios.patch(`/api/orders/${id}/status`, { orderStatus });
+      showToast('Status updated');
       load();
     } catch {
       showToast('Update failed', 'error');

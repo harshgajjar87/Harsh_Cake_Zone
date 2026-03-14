@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function FeedbackPage() {
@@ -32,7 +32,7 @@ export default function FeedbackPage() {
         <div className="text-6xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-gray-800">Thank you!</h2>
         <p className="text-gray-500 mt-2">Your feedback means the world to us.</p>
-        <Link to="/" className="btn-primary mt-6 inline-block">← Back to Home</Link>
+        <p className="text-sm text-gray-400 mt-4">You can close this tab now. 😊</p>
       </div>
     );
   }
