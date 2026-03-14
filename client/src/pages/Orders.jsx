@@ -338,6 +338,16 @@ export default function Orders() {
                       <button className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => setDeleteTarget({ id: o._id, name: o.customerName })}>
                         Delete
                       </button>
+                      {o.receiptToken && (
+                        <a
+                          href={`/receipt/${o.receiptToken}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-xl"
+                        >
+                          🧾 View Receipt
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
