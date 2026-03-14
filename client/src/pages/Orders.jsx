@@ -307,7 +307,7 @@ export default function Orders() {
                       )}
                       {o.paymentStatus === 'Paid' && (
                         <span className="bg-green-50 text-green-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-green-200">
-                          ✅ Payment Requested
+                          ✅ Paid
                         </span>
                       )}
                       {o.paymentStatus === 'Paid' && !o.receiptSent && (
