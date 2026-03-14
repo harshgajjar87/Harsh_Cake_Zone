@@ -31,7 +31,7 @@ exports.getOrder = async (req, res) => {
 // POST create order
 exports.createOrder = async (req, res) => {
   try {
-    const { customerName, phone, cakeDetails, sellingPrice, orderDate, paymentStatus } = req.body;
+    const { customerName, phone, cakeDetails, weight, sellingPrice, orderDate, paymentStatus } = req.body;
     const receiptToken = crypto.randomBytes(12).toString('hex');
     const cakeImageURL = req.file ? req.file.path : '';
 
@@ -39,6 +39,7 @@ exports.createOrder = async (req, res) => {
       customerName,
       phone,
       cakeDetails,
+      weight: weight || '',
       sellingPrice: parseFloat(sellingPrice),
       orderDate: orderDate ? new Date(orderDate) : new Date(),
       paymentStatus: paymentStatus || 'Pending',

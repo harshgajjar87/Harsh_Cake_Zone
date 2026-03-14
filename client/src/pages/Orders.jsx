@@ -23,7 +23,8 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ customerName: '', phone: '', cakeDetails: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+  const [form, setForm] = useState({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+  const [weightMode, setWeightMode] = useState('preset'); // 'preset' | 'manual'
   const [cakeImage, setCakeImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [filterDate, setFilterDate] = useState('');
@@ -60,7 +61,8 @@ export default function Orders() {
       await axios.post('/api/orders', fd);
       showToast('Order created successfully!');
       setShowForm(false);
-      setForm({ customerName: '', phone: '', cakeDetails: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+      setForm({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+      setWeightMode('preset');
       setCakeImage(null);
       load();
     } catch (err) {
@@ -160,6 +162,7 @@ export default function Orders() {
       { header: 'Customer', key: 'customerName' },
       { header: 'Phone', key: 'phone' },
       { header: 'Cake Details', key: 'cakeDetails' },
+      { header: 'Weight', key: 'weight' },
       { header: 'Amount (₹)', key: 'sellingPrice' },
       { header: 'Order Date', key: 'orderDateFmt' },
       { header: 'Order Status', key: 'orderStatus' },
@@ -204,6 +207,28 @@ export default function Orders() {
             <input className="input" placeholder="Customer Name *" required value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
             <input className="input" placeholder="Phone *" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <input className="input sm:col-span-2" placeholder="Cake Details *" required value={form.cakeDetails} onChange={(e) => setForm({ ...form, cakeDetails: e.target.value })} />
+            <div className="sm:col-span-2 flex gap-2">
+              <select
+                className="input flex-1"
+                value={weightMode === 'manual' ? 'manual' : form.weight}
+                onChange={(e) => {
+                  if (e.target.value === 'manual') { setWeightMode('manual'); setForm({ ...form, weight: '' }); }
+                  else { setWeightMode('preset'); setForm({ ...form, weight: e.target.value }); }
+                }}
+              >
+                <option value="">Weight (optional)</option>
+                <option value="500gm">500 gm</option>
+                <option value="700gm">700 gm</option>
+                <option value="1kg">1 kg</option>
+                <option value="1.5kg">1.5 kg</option>
+                <option value="2kg">2 kg</option>
+                <option value="3kg">3 kg</option>
+                <option value="manual">Manual...</option>
+              </select>
+              {weightMode === 'manual' && (
+                <input className="input flex-1" placeholder="e.g. 2.5kg" value={form.weight} onChange={(e) => setForm({ ...form, weight: e.target.value })} />
+              )}
+            </div>
             <input className="input" type="number" placeholder="Selling Price (₹) *" required value={form.sellingPrice} onChange={(e) => setForm({ ...form, sellingPrice: e.target.value })} />
             <input className="input" type="date" value={form.orderDate} onChange={(e) => setForm({ ...form, orderDate: e.target.value })} />
             <select className="input" value={form.paymentStatus} onChange={(e) => setForm({ ...form, paymentStatus: e.target.value })}>
@@ -285,7 +310,7 @@ export default function Orders() {
                         <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
                         <span className="badge-ready">{o.orderStatus}</span>
                       </div>
-                      <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}</p>
+                      <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}{o.weight ? ` · ${o.weight}` : ''}</p>
                       <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
                     </div>
                   </div>

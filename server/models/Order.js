@@ -5,6 +5,7 @@ const orderSchema = new mongoose.Schema(
     customerName: { type: String, required: true, trim: true },
     phone: { type: String, required: true },
     cakeDetails: { type: String, required: true },
+    weight: { type: String, default: '' },
     sellingPrice: { type: Number, required: true },
     orderDate: { type: Date, default: Date.now },
     paymentStatus: { type: String, enum: ['Pending', 'Paid'], default: 'Pending' },
