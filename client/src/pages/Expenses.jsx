@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useApp } from '../context/AppContext';
 import { exportToExcel } from '../utils/exportUtils';
+import Calculator from '../components/Calculator';
 
 const CATEGORIES = ['Ingredients', 'Raw Materials', 'Packaging', 'Other'];
 const CAT_COLORS = {
@@ -10,6 +11,16 @@ const CAT_COLORS = {
   Packaging: 'bg-blue-100 text-blue-700',
   Other: 'bg-gray-100 text-gray-700',
 };
+
+function groupByDate(expenses) {
+  const groups = {};
+  expenses.forEach((e) => {
+    const key = new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(e);
+  });
+  return groups;
+}
 
 export default function Expenses() {
   const { showToast } = useApp();
@@ -20,8 +31,10 @@ export default function Expenses() {
   const [form, setForm] = useState({ materialName: '', amountSpent: '', category: 'Ingredients', date: '', notes: '' });
   const [billImage, setBillImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [editTarget, setEditTarget] = useState(null); // holds expense being edited
+  const [editTarget, setEditTarget] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [sortDir, setSortDir] = useState('desc');
+  const [showCalc, setShowCalc] = useState(false);
 
   const load = async () => {
     const [e, s] = await Promise.all([
@@ -85,6 +98,12 @@ export default function Expenses() {
 
   const totalExpenses = expenses.reduce((s, e) => s + e.amountSpent, 0);
 
+  const sortedExpenses = [...expenses].sort((a, b) => {
+    const diff = new Date(a.date) - new Date(b.date);
+    return sortDir === 'asc' ? diff : -diff;
+  });
+  const grouped = groupByDate(sortedExpenses);
+
   const exportExpenses = () => {
     const cols = [
       { header: 'Item', key: 'materialName' },
@@ -101,7 +120,14 @@ export default function Expenses() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Expenses</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Expenses</h1>
+        <button className="btn-secondary text-sm" onClick={() => setShowCalc(!showCalc)}>
+          🧮 Calculator
+        </button>
+      </div>
+
+      {showCalc && <Calculator onClose={() => setShowCalc(false)} />}
 
       {/* Category Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -144,7 +170,12 @@ export default function Expenses() {
 
       {/* Expense List */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-sm text-gray-500">{expenses.length} entries {filterCat && `· ${filterCat}`}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-gray-500">{expenses.length} entries {filterCat && `· ${filterCat}`}</p>
+          <button className="btn-secondary text-xs" onClick={() => setSortDir(sortDir === 'desc' ? 'asc' : 'desc')}>
+            {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
+          </button>
+        </div>
         <div className="flex items-center gap-3">
           <button className="btn-secondary text-xs" onClick={exportExpenses} disabled={expenses.length === 0}>
             ⬇ Export Excel
@@ -153,9 +184,19 @@ export default function Expenses() {
         </div>
       </div>
 
-      <div className="space-y-3">
-        {expenses.length === 0 && <p className="text-center text-gray-400 py-12">No expenses logged yet.</p>}
-        {expenses.map((exp) => (
+      {expenses.length === 0 && <p className="text-center text-gray-400 py-12">No expenses logged yet.</p>}
+
+      {Object.entries(grouped).map(([date, dayExpenses]) => (
+        <div key={date}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-px flex-1 bg-gray-100" />
+            <span className="text-xs font-semibold text-gray-400 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+              📅 {date} · {dayExpenses.length} entr{dayExpenses.length !== 1 ? 'ies' : 'y'} · ₹{dayExpenses.reduce((s, e) => s + e.amountSpent, 0).toLocaleString('en-IN')}
+            </span>
+            <div className="h-px flex-1 bg-gray-100" />
+          </div>
+          <div className="space-y-3">
+            {dayExpenses.map((exp) => (
           <div key={exp._id} className="card hover:shadow-md transition-shadow">
             {editTarget === exp._id ? (
               <form onSubmit={(e) => handleUpdate(e, exp._id)} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -198,8 +239,10 @@ export default function Expenses() {
               </div>
             )}
           </div>
-        ))}
-      </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

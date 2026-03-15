@@ -95,7 +95,7 @@ export default function Orders() {
         `━━━━━━━━━━━━━━━━━━\n\n` +
         `Hello *${o.customerName}*! 👋\n\n` +
         `🙏 Thank you so much for your order!\n` +
-        `Your cake is *ready & waiting* for you! 🎉\n\n` +
+        `Your cake is ready! 🎉\n\n` +
         `━━━━━━━━━━━━━━━━━━\n` +
         `🛍️ *Order:* ${o.cakeDetails}\n` +
         `💰 *Amount Due:* ₹${o.sellingPrice}\n` +
