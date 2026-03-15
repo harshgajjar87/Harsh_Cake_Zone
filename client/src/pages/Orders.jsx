@@ -29,7 +29,9 @@ export default function Orders() {
   const [submitting, setSubmitting] = useState(false);
   const [filterDate, setFilterDate] = useState('');
   const [sortDir, setSortDir] = useState('desc');
-  const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [editTarget, setEditTarget] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   const load = async () => {
     const { data } = await axios.get('/api/orders');
@@ -114,8 +116,7 @@ export default function Orders() {
   const sendReceipt = async (o) => {
     const digits = o.phone.replace(/\D/g, '');
     const phone = digits.startsWith('91') ? digits : `91${digits}`;
-    const base = process.env.REACT_APP_FRONTEND_URL || window.location.origin;
-    const receiptURL = `${base}/receipt/${o.receiptToken}`;
+    const receiptURL = `${window.location.origin}/receipt/${o.receiptToken}`;
     const message =
       `🧾✨ *Harsh Cake Zone* ✨🧾\n` +
       `━━━━━━━━━━━━━━━━━━\n\n` +
@@ -155,6 +156,30 @@ export default function Orders() {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     await axios.patch(`/api/orders/${o._id}/status`, { reviewSent: true });
     load();
+  };
+
+  const startEdit = (o) => {
+    setEditTarget(o._id);
+    setEditForm({
+      customerName: o.customerName,
+      phone: o.phone,
+      cakeDetails: o.cakeDetails,
+      weight: o.weight || '',
+      sellingPrice: o.sellingPrice,
+      orderDate: new Date(o.orderDate).toLocaleDateString('en-CA'),
+    });
+  };
+
+  const handleUpdate = async (e, id) => {
+    e.preventDefault();
+    try {
+      await axios.patch(`/api/orders/${id}`, editForm);
+      showToast('Order updated!');
+      setEditTarget(null);
+      load();
+    } catch {
+      showToast('Update failed', 'error');
+    }
   };
 
   const exportOrders = () => {
@@ -299,83 +324,93 @@ export default function Orders() {
           <div className="space-y-3">
             {dayOrders.map((o) => (
               <div key={o._id} className="card hover:shadow-md transition-shadow">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div className="flex gap-3">
-                    {o.cakeImageURL && (
-                      <img src={o.cakeImageURL} alt="cake" className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
-                    )}
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-semibold">{o.customerName}</h3>
-                        <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
-                        <span className="badge-ready">{o.orderStatus}</span>
+                {editTarget === o._id ? (
+                  <form onSubmit={(e) => handleUpdate(e, o._id)} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input className="input" required placeholder="Customer Name" value={editForm.customerName} onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })} />
+                    <input className="input" required placeholder="Phone" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })} />
+                    <input className="input sm:col-span-2" required placeholder="Cake Details" value={editForm.cakeDetails} onChange={(e) => setEditForm({ ...editForm, cakeDetails: e.target.value })} />
+                    <input className="input" placeholder="Weight (e.g. 1kg)" value={editForm.weight} onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })} />
+                    <input className="input" type="number" required placeholder="Price (₹)" value={editForm.sellingPrice} onChange={(e) => setEditForm({ ...editForm, sellingPrice: e.target.value })} />
+                    <input className="input" type="date" value={editForm.orderDate} onChange={(e) => setEditForm({ ...editForm, orderDate: e.target.value })} />
+                    <div className="sm:col-span-2 flex gap-2 justify-end">
+                      <button type="button" className="btn-secondary text-sm" onClick={() => setEditTarget(null)}>Cancel</button>
+                      <button type="submit" className="btn-primary text-sm">Save</button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="flex gap-3">
+                      {o.cakeImageURL && (
+                        <img src={o.cakeImageURL} alt="cake" className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-semibold">{o.customerName}</h3>
+                          <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
+                          <span className="badge-ready">{o.orderStatus}</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}{o.weight ? ` · ${o.weight}` : ''}</p>
+                        <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
                       </div>
-                      <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}{o.weight ? ` · ${o.weight}` : ''}</p>
-                      <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xl font-bold text-orange-600 sm:text-right">₹{o.sellingPrice}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {STATUS_FLOW.indexOf(o.orderStatus) < STATUS_FLOW.length - 1 && (
+                          <button className="btn-secondary text-xs" onClick={() => updateStatus(o._id, STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1])}>
+                            → {STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1]}
+                          </button>
+                        )}
+                        <button className="bg-orange-100 hover:bg-orange-200 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
+                          ✏️ Edit
+                        </button>
+                        {o.paymentStatus === 'Pending' && (
+                          <button className="bg-green-100 hover:bg-green-200 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendPaymentRequest(o)}>
+                            💳 Send Payment Request
+                          </button>
+                        )}
+                        {o.paymentStatus === 'Paid' && (
+                          <span className="bg-green-50 text-green-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-green-200">
+                            ✅ Paid
+                          </span>
+                        )}
+                        {o.paymentStatus === 'Paid' && !o.receiptSent && (
+                          <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendReceipt(o)}>
+                            🧾 Send Receipt
+                          </button>
+                        )}
+                        {o.receiptSent && (
+                          <span className="bg-blue-50 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-blue-200">
+                            ✅ Receipt Sent
+                          </span>
+                        )}
+                        {!o.reviewSent && !o.feedbackGiven && (
+                          <button className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendReview(o)}>
+                            ⭐ Send Review
+                          </button>
+                        )}
+                        {o.reviewSent && !o.feedbackGiven && (
+                          <span className="bg-yellow-50 text-yellow-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-yellow-200">
+                            ✅ Review Sent
+                          </span>
+                        )}
+                        {o.feedbackGiven && (
+                          <span className="bg-yellow-50 text-yellow-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-yellow-200">
+                            ⭐ Reviewed
+                          </span>
+                        )}
+                        <button className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => setDeleteTarget({ id: o._id, name: o.customerName })}>
+                          Delete
+                        </button>
+                        {o.receiptToken && (
+                          <a href={`/receipt/${o.receiptToken}`} target="_blank" rel="noreferrer" className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-xl">
+                            🧾 View Receipt
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
-                <div className="flex flex-col gap-2">
-                    <p className="text-xl font-bold text-orange-600 sm:text-right">₹{o.sellingPrice}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {STATUS_FLOW.indexOf(o.orderStatus) < STATUS_FLOW.length - 1 && (
-                        <button
-                          className="btn-secondary text-xs"
-                          onClick={() => updateStatus(o._id, STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1])}
-                        >
-                          → {STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1]}
-                        </button>
-                      )}
-                      {o.paymentStatus === 'Pending' && (
-                        <button className="bg-green-100 hover:bg-green-200 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendPaymentRequest(o)}>
-                          💳 Send Payment Request
-                        </button>
-                      )}
-                      {o.paymentStatus === 'Paid' && (
-                        <span className="bg-green-50 text-green-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-green-200">
-                          ✅ Paid
-                        </span>
-                      )}
-                      {o.paymentStatus === 'Paid' && !o.receiptSent && (
-                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendReceipt(o)}>
-                          🧾 Send Receipt
-                        </button>
-                      )}
-                      {o.receiptSent && (
-                        <span className="bg-blue-50 text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-blue-200">
-                          ✅ Receipt Sent
-                        </span>
-                      )}
-                      {!o.reviewSent && !o.feedbackGiven && (
-                        <button className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendReview(o)}>
-                          ⭐ Send Review
-                        </button>
-                      )}
-                      {o.reviewSent && !o.feedbackGiven && (
-                        <span className="bg-yellow-50 text-yellow-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-yellow-200">
-                          ✅ Review Sent
-                        </span>
-                      )}
-                      {o.feedbackGiven && (
-                        <span className="bg-yellow-50 text-yellow-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-yellow-200">
-                          ⭐ Reviewed
-                        </span>
-                      )}
-                      <button className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => setDeleteTarget({ id: o._id, name: o.customerName })}>
-                        Delete
-                      </button>
-                      {o.receiptToken && (
-                        <a
-                          href={`/receipt/${o.receiptToken}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-xl"
-                        >
-                          🧾 View Receipt
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </div>

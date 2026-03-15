@@ -73,6 +73,25 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
+// PATCH edit order fields
+exports.updateOrder = async (req, res) => {
+  try {
+    const { customerName, phone, cakeDetails, weight, sellingPrice, orderDate } = req.body;
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+    if (customerName) order.customerName = customerName;
+    if (phone) order.phone = phone;
+    if (cakeDetails) order.cakeDetails = cakeDetails;
+    if (weight !== undefined) order.weight = weight;
+    if (sellingPrice) order.sellingPrice = parseFloat(sellingPrice);
+    if (orderDate) order.orderDate = new Date(orderDate);
+    await order.save();
+    res.json({ success: true, data: order });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 // DELETE order
 exports.deleteOrder = async (req, res) => {
   try {
