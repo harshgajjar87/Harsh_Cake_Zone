@@ -85,6 +85,7 @@ exports.updateOrder = async (req, res) => {
     if (weight !== undefined) order.weight = weight;
     if (sellingPrice) order.sellingPrice = parseFloat(sellingPrice);
     if (orderDate) order.orderDate = new Date(orderDate);
+    if (req.file) order.cakeImageURL = req.file.path;
     await order.save();
     res.json({ success: true, data: order });
   } catch (err) {

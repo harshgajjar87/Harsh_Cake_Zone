@@ -32,6 +32,7 @@ export default function Orders() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [editTarget, setEditTarget] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [editImage, setEditImage] = useState(null);
 
   const load = async () => {
     const { data } = await axios.get('/api/orders');
@@ -160,6 +161,7 @@ export default function Orders() {
 
   const startEdit = (o) => {
     setEditTarget(o._id);
+    setEditImage(null);
     setEditForm({
       customerName: o.customerName,
       phone: o.phone,
@@ -173,9 +175,13 @@ export default function Orders() {
   const handleUpdate = async (e, id) => {
     e.preventDefault();
     try {
-      await axios.patch(`/api/orders/${id}`, editForm);
+      const fd = new FormData();
+      Object.entries(editForm).forEach(([k, v]) => fd.append(k, v));
+      if (editImage) fd.append('cakeImage', editImage);
+      await axios.patch(`/api/orders/${id}`, fd);
       showToast('Order updated!');
       setEditTarget(null);
+      setEditImage(null);
       load();
     } catch {
       showToast('Update failed', 'error');
@@ -332,6 +338,11 @@ export default function Orders() {
                     <input className="input" placeholder="Weight (e.g. 1kg)" value={editForm.weight} onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })} />
                     <input className="input" type="number" required placeholder="Price (₹)" value={editForm.sellingPrice} onChange={(e) => setEditForm({ ...editForm, sellingPrice: e.target.value })} />
                     <input className="input" type="date" value={editForm.orderDate} onChange={(e) => setEditForm({ ...editForm, orderDate: e.target.value })} />
+                    <div className="sm:col-span-2">
+                      <label className="text-xs text-gray-500 mb-1 block">Cake Photo</label>
+                      <input type="file" accept="image/*" className="input" onChange={(e) => setEditImage(e.target.files[0])} />
+                      {editImage && <p className="text-xs text-green-600 mt-1">✅ {editImage.name}</p>}
+                    </div>
                     <div className="sm:col-span-2 flex gap-2 justify-end">
                       <button type="button" className="btn-secondary text-sm" onClick={() => setEditTarget(null)}>Cancel</button>
                       <button type="submit" className="btn-primary text-sm">Save</button>
