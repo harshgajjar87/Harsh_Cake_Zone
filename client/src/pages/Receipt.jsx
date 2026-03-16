@@ -65,7 +65,7 @@ export default function Receipt() {
         {/* Cake Image */}
         {order.cakeImageURL && (
           <div className="mt-4">
-            <img src={order.cakeImageURL} alt="Your cake" className="w-full rounded-2xl object-cover max-h-48" />
+            <img src={order.cakeImageURL} alt="Your cake" className="w-full rounded-2xl object-contain bg-gray-50" />
           </div>
         )}
 
