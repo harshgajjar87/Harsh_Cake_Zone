@@ -16,7 +16,7 @@ import Login from './pages/Login';
 import useTheme from './hooks/useTheme';
 function Layout({ children, isAuth, onLogout, dark, toggleTheme }) {
   const { pathname } = useLocation();
-  const isPublic = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/');
+  const isPublic = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/') || pathname === '/gallery';
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors">
       {!isPublic && isAuth && <Navbar onLogout={onLogout} dark={dark} toggleTheme={toggleTheme} />}

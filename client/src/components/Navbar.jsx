@@ -6,7 +6,6 @@ const links = [
   { to: '/orders', label: 'Orders', icon: '🎂' },
   { to: '/expenses', label: 'Expenses', icon: '💸' },
   { to: '/reviews', label: 'Reviews', icon: '⭐' },
-  { to: '/gallery', label: 'Gallery', icon: '🖼️' },
 ];
 
 export default function Navbar({ onLogout, dark, toggleTheme }) {

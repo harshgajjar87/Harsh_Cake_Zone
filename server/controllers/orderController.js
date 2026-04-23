@@ -56,12 +56,13 @@ exports.createOrder = async (req, res) => {
 // PATCH update order status
 exports.updateOrderStatus = async (req, res) => {
   try {
-    const { orderStatus, paymentStatus, receiptSent, reviewSent } = req.body;
+    const { orderStatus, paymentStatus, receiptSent, reviewSent, confirmationSent } = req.body;
     const update = {};
     if (orderStatus) update.orderStatus = orderStatus;
     if (paymentStatus) update.paymentStatus = paymentStatus;
     if (receiptSent !== undefined) update.receiptSent = receiptSent;
     if (reviewSent !== undefined) update.reviewSent = reviewSent;
+    if (confirmationSent !== undefined) update.confirmationSent = confirmationSent;
     const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: false });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     res.json({ success: true, data: order });

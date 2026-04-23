@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema(
     feedbackGiven: { type: Boolean, default: false },
     receiptSent: { type: Boolean, default: false },
     reviewSent: { type: Boolean, default: false },
+    confirmationSent: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

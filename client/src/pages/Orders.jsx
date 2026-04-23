@@ -121,7 +121,7 @@ export default function Orders() {
     load();
   };
 
-  const sendConfirmation = (o) => {
+  const sendConfirmation = async (o) => {
     const digits = o.phone.replace(/\D/g, '');
     const phone = digits.startsWith('91') ? digits : `91${digits}`;
     const orderDate = new Date(o.orderDate).toLocaleDateString('en-IN', {
@@ -135,6 +135,8 @@ export default function Orders() {
       `Thank you for choosing us! 🙏\n` +
       `— Harsh Cake Zone`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    await axios.patch(`/api/orders/${o._id}/status`, { confirmationSent: true });
+    load();
   };
 
   const sendReview = async (o) => {
@@ -373,10 +375,15 @@ export default function Orders() {
                             </button>
                           );
                         })()}
-                        <button className="bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendConfirmation(o)}>
-                          📩 Send Confirmation
-                        </button>
-                        <button className="bg-orange-100 hover:bg-orange-200 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
+                        {!o.confirmationSent ? (
+                          <button className="bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendConfirmation(o)}>
+                            📩 Send Confirmation
+                          </button>
+                        ) : (
+                          <span className="bg-purple-50 text-purple-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-purple-200">
+                            ✅ Confirmation Sent
+                          </span>
+                        )}                        <button className="bg-orange-100 hover:bg-orange-200 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
                           ✏️ Edit
                         </button>
                         {o.paymentStatus === 'Pending' && (
