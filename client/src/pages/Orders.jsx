@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import ConfirmModal from '../components/ConfirmModal';
 import { exportToExcel } from '../utils/exportUtils';
 
-const STATUS_FLOW = ['Received', 'In Progress', 'Ready', 'Delivered'];
+const STATUS_FLOW = ['In Progress', 'Delivered'];
 
 function groupByDate(orders) {
   const groups = {};
@@ -92,20 +92,12 @@ export default function Orders() {
       const phone = digits.startsWith('91') ? digits : `91${digits}`;
       const upiLink = `upi://pay?pa=${process.env.REACT_APP_UPI_ID || '8866319009@okicici'}&pn=HarshCakes&am=${o.sellingPrice}&cu=INR`;
       const message =
-        `🎂✨ *Harsh Cake Zone* ✨🎂\n` +
-        `━━━━━━━━━━━━━━━━━━\n\n` +
-        `Hello *${o.customerName}*! 👋\n\n` +
-        `🙏 Thank you so much for your order!\n` +
-        `Your cake is ready! 🎉\n\n` +
-        `━━━━━━━━━━━━━━━━━━\n` +
-        `🛍️ *Order:* ${o.cakeDetails}\n` +
-        `💰 *Amount Due:* ₹${o.sellingPrice}\n` +
-        `━━━━━━━━━━━━━━━━━━\n\n` +
-        `📲 *Pay via UPI (tap to open):*\n` +
-        `👉 ${upiLink}\n\n` +
-        `━━━━━━━━━━━━━━━━━━\n` +
-        `💕 We truly appreciate your support!\n` +
-        `See you soon! 😊`;
+        `Hi *${o.customerName}* 👋\n` +
+        `Your cake is ready! 🎂\n\n` +
+        `*${o.cakeDetails}* — ₹${o.sellingPrice}\n\n` +
+        `💳 Pay via UPI:\n${upiLink}\n\n` +
+        `Thank you for trusting us! 🙏\n` +
+        `— Harsh Cake Zone`;
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
       showToast('Payment request sent!');
       load();
@@ -119,41 +111,46 @@ export default function Orders() {
     const phone = digits.startsWith('91') ? digits : `91${digits}`;
     const receiptURL = `${window.location.origin}/receipt/${o.receiptToken}`;
     const message =
-      `🧾✨ *Harsh Cake Zone* ✨🧾\n` +
-      `━━━━━━━━━━━━━━━━━━\n\n` +
-      `Hello *${o.customerName}*! 👋\n\n` +
-      `📋 Here is your *Digital Receipt* for:\n` +
-      `🎂 _${o.cakeDetails}_\n\n` +
-      `━━━━━━━━━━━━━━━━━━\n` +
-      `💰 *Amount Paid:* ₹${o.sellingPrice} ✅\n` +
-      `━━━━━━━━━━━━━━━━━━\n\n` +
-      `🔗 *View & Download Receipt:*\n` +
-      `👉 ${receiptURL}\n\n` +
-      `━━━━━━━━━━━━━━━━━━\n` +
-      `🙏 Thank you for choosing us!\n` +
-      `We hope you loved your cake! 💕🎂`;
+      `Hi *${o.customerName}* 👋\n` +
+      `Here's your receipt for *${o.cakeDetails}* — ₹${o.sellingPrice} ✅\n\n` +
+      `🧾 ${receiptURL}\n\n` +
+      `Thank you for your order! 🙏\n` +
+      `— Harsh Cake Zone`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     await axios.patch(`/api/orders/${o._id}/status`, { receiptSent: true });
     load();
+  };
+
+  const sendConfirmation = (o) => {
+    const digits = o.phone.replace(/\D/g, '');
+    const phone = digits.startsWith('91') ? digits : `91${digits}`;
+    const orderDate = new Date(o.orderDate).toLocaleDateString('en-IN', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    });
+    const message =
+      `Hi *${o.customerName}* 👋\n` +
+      `✅ Your order is confirmed!\n\n` +
+      `🎂 *${o.cakeDetails}*${o.weight ? ` (${o.weight})` : ''}\n` +
+      `💰 ₹${o.sellingPrice} | 📅 ${orderDate}\n\n` +
+      `Thank you for choosing us! 🙏\n` +
+      `— Harsh Cake Zone`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const sendReview = async (o) => {
     const digits = o.phone.replace(/\D/g, '');
     const phone = digits.startsWith('91') ? digits : `91${digits}`;
     const reviewURL = `${window.location.origin}/feedback/${o._id}`;
+    const galleryURL = `${window.location.origin}/gallery`;
     const message =
-      `⭐✨ *Harsh Cake Zone* ✨⭐\n` +
-      `━━━━━━━━━━━━━━━━━━\n\n` +
-      `Hello *${o.customerName}*! 👋\n\n` +
-      `🎂 We hope you absolutely *loved* your cake!\n\n` +
-      `💬 Your feedback means the world to us.\n` +
-      `It only takes *30 seconds* — we promise! 🙏\n\n` +
-      `━━━━━━━━━━━━━━━━━━\n` +
-      `🌟 *Leave Your Review Here:*\n` +
-      `👉 ${reviewURL}\n` +
-      `━━━━━━━━━━━━━━━━━━\n\n` +
-      `💕 Thank you for being our valued customer!\n` +
-      `— *Harsh Cake Zone* 🎂`;
+      `Hi *${o.customerName}* 👋\n` +
+      `Hope you loved your cake! 🎂\n\n` +
+      `⭐ Mind leaving a quick review?\n` +
+      `${reviewURL}\n\n` +
+      `🖼️ See all our cakes:\n` +
+      `${galleryURL}\n\n` +
+      `Thank you for your support! 🙏\n` +
+      `— Harsh Cake Zone`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     await axios.patch(`/api/orders/${o._id}/status`, { reviewSent: true });
     load();
@@ -358,7 +355,7 @@ export default function Orders() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-semibold">{o.customerName}</h3>
                           <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
-                          <span className="badge-ready">{o.orderStatus}</span>
+                          <span className="badge-ready">{['Received', 'Ready'].includes(o.orderStatus) ? 'In Progress' : o.orderStatus}</span>
                         </div>
                         <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}{o.weight ? ` · ${o.weight}` : ''}</p>
                         <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
@@ -367,11 +364,18 @@ export default function Orders() {
                     <div className="flex flex-col gap-2">
                       <p className="text-xl font-bold text-orange-600 sm:text-right">₹{o.sellingPrice}</p>
                       <div className="flex flex-wrap gap-2">
-                        {STATUS_FLOW.indexOf(o.orderStatus) < STATUS_FLOW.length - 1 && (
-                          <button className="btn-secondary text-xs" onClick={() => updateStatus(o._id, STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1])}>
-                            → {STATUS_FLOW[STATUS_FLOW.indexOf(o.orderStatus) + 1]}
-                          </button>
-                        )}
+                        {(() => {
+                          const normalized = ['Received', 'Ready'].includes(o.orderStatus) ? 'In Progress' : o.orderStatus;
+                          const idx = STATUS_FLOW.indexOf(normalized);
+                          return idx < STATUS_FLOW.length - 1 && (
+                            <button className="btn-secondary text-xs" onClick={() => updateStatus(o._id, STATUS_FLOW[idx + 1])}>
+                              → {STATUS_FLOW[idx + 1]}
+                            </button>
+                          );
+                        })()}
+                        <button className="bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendConfirmation(o)}>
+                          📩 Send Confirmation
+                        </button>
                         <button className="bg-orange-100 hover:bg-orange-200 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
                           ✏️ Edit
                         </button>

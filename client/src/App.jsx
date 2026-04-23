@@ -10,10 +10,10 @@ import Expenses from './pages/Expenses';
 import Reviews from './pages/Reviews';
 import Receipt from './pages/Receipt';
 import FeedbackPage from './pages/FeedbackPage';
+import Gallery from './pages/Gallery';
 import Login from './pages/Login';
 
 import useTheme from './hooks/useTheme';
-
 function Layout({ children, isAuth, onLogout, dark, toggleTheme }) {
   const { pathname } = useLocation();
   const isPublic = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/');
@@ -66,6 +66,7 @@ export default function App() {
             {/* Public routes — customers only */}
             <Route path="/receipt/:token" element={<Receipt />} />
             <Route path="/feedback/:orderId" element={<FeedbackPage />} />
+            <Route path="/gallery" element={<Gallery />} />
 
             {/* Auth */}
             <Route path="/login" element={isAuth ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />} />

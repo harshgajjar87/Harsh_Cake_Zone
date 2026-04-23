@@ -53,20 +53,17 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// PATCH update order status — triggers WhatsApp when marked Ready
+// PATCH update order status
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { orderStatus, paymentStatus, receiptSent, reviewSent } = req.body;
-    const order = await Order.findById(req.params.id);
+    const update = {};
+    if (orderStatus) update.orderStatus = orderStatus;
+    if (paymentStatus) update.paymentStatus = paymentStatus;
+    if (receiptSent !== undefined) update.receiptSent = receiptSent;
+    if (reviewSent !== undefined) update.reviewSent = reviewSent;
+    const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: false });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-
-    const wasNotReady = order.orderStatus !== 'Ready';
-    if (orderStatus) order.orderStatus = orderStatus;
-    if (paymentStatus) order.paymentStatus = paymentStatus;
-    if (receiptSent !== undefined) order.receiptSent = receiptSent;
-    if (reviewSent !== undefined) order.reviewSent = reviewSent;
-    await order.save();
-
     res.json({ success: true, data: order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -77,16 +74,16 @@ exports.updateOrderStatus = async (req, res) => {
 exports.updateOrder = async (req, res) => {
   try {
     const { customerName, phone, cakeDetails, weight, sellingPrice, orderDate } = req.body;
-    const order = await Order.findById(req.params.id);
+    const update = {};
+    if (customerName) update.customerName = customerName;
+    if (phone) update.phone = phone;
+    if (cakeDetails) update.cakeDetails = cakeDetails;
+    if (weight !== undefined) update.weight = weight;
+    if (sellingPrice) update.sellingPrice = parseFloat(sellingPrice);
+    if (orderDate) update.orderDate = new Date(orderDate);
+    if (req.file) update.cakeImageURL = req.file.path;
+    const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: false });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-    if (customerName) order.customerName = customerName;
-    if (phone) order.phone = phone;
-    if (cakeDetails) order.cakeDetails = cakeDetails;
-    if (weight !== undefined) order.weight = weight;
-    if (sellingPrice) order.sellingPrice = parseFloat(sellingPrice);
-    if (orderDate) order.orderDate = new Date(orderDate);
-    if (req.file) order.cakeImageURL = req.file.path;
-    await order.save();
     res.json({ success: true, data: order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

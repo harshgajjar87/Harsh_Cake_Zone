@@ -11,8 +11,8 @@ const orderSchema = new mongoose.Schema(
     paymentStatus: { type: String, enum: ['Pending', 'Paid'], default: 'Pending' },
     orderStatus: {
       type: String,
-      enum: ['Received', 'In Progress', 'Ready', 'Delivered'],
-      default: 'Received',
+      enum: ['In Progress', 'Delivered'],
+      default: 'In Progress',
     },
     cakeImageURL: { type: String, default: '' },
     receiptToken: { type: String, unique: true, sparse: true },
