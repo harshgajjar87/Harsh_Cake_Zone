@@ -107,7 +107,7 @@ export default function Dashboard() {
           Apply
         </button>
         {(startDate || endDate) && (
-          <button className="text-xs text-orange-500 hover:underline whitespace-nowrap" onClick={handleClear}>
+          <button className="text-xs text-violet-600 hover:underline whitespace-nowrap" onClick={handleClear}>
             Clear
           </button>
         )}
@@ -161,7 +161,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-800">Recent Orders</h2>
-            <Link to="/orders" className="text-sm text-orange-500 hover:underline">View all →</Link>
+            <Link to="/orders" className="text-sm text-violet-600 hover:underline">View all →</Link>
           </div>
           <div className="space-y-3">
             {summary.recentOrders.map((o) => (

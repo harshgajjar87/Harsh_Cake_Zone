@@ -232,8 +232,8 @@ export default function Orders() {
 
       {/* New Order Form */}
       {showForm && (
-        <div className="card border border-orange-100">
-          <h2 className="font-semibold mb-4 text-orange-600">New Order</h2>
+        <div className="card border border-violet-100">
+          <h2 className="font-semibold mb-4 text-violet-700">New Order</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input className="input" placeholder="Customer Name *" required value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
             <input className="input" placeholder="Phone *" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
@@ -290,7 +290,7 @@ export default function Orders() {
             onChange={(e) => setFilterDate(e.target.value)}
           />
           {filterDate && (
-            <button className="text-xs text-orange-500 hover:underline whitespace-nowrap" onClick={() => setFilterDate('')}>
+            <button className="text-xs text-violet-600 hover:underline whitespace-nowrap" onClick={() => setFilterDate('')}>
               Clear
             </button>
           )}
@@ -365,7 +365,7 @@ export default function Orders() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <p className="text-xl font-bold text-orange-600 sm:text-right">₹{o.sellingPrice}</p>
+                      <p className="text-xl font-bold text-violet-700 sm:text-right">₹{o.sellingPrice}</p>
                       <div className="flex flex-wrap gap-2">
                         {(() => {
                           const normalized = ['Received', 'Ready'].includes(o.orderStatus) ? 'In Progress' : o.orderStatus;
@@ -384,7 +384,7 @@ export default function Orders() {
                           <span className="bg-purple-50 text-purple-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-purple-200">
                             ✅ Confirmation Sent
                           </span>
-                        )}                        <button className="bg-orange-100 hover:bg-orange-200 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
+                        )}                        <button className="bg-violet-100 hover:bg-violet-200 text-violet-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
                           ✏️ Edit
                         </button>
                         {o.paymentStatus === 'Pending' && (

@@ -30,15 +30,13 @@ export default function Receipt() {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="card border border-orange-100 print:shadow-none" id="receipt">
-        {/* Header */}
-        <div className="text-center border-b border-dashed border-gray-200 pb-6 mb-6">
+      <div className="card border border-violet-100 print:shadow-none" id="receipt">
+        <div className="text-center border-b border-dashed border-violet-100 pb-6 mb-6">
           <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-2" />
-          <h1 className="text-2xl font-bold text-orange-600">Harsh Cake Zone</h1>
+          <h1 className="text-2xl font-bold text-violet-700">Harsh Cake Zone</h1>
           <p className="text-xs text-gray-400 mt-1">Digital Receipt</p>
         </div>
 
-        {/* Order Details */}
         <div className="space-y-3 text-sm">
           <Row label="Customer" value={order.customerName} />
           <Row label="Phone" value={order.phone} />
@@ -47,50 +45,33 @@ export default function Receipt() {
           <Row label="Status" value={<span className={order.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{order.paymentStatus}</span>} />
         </div>
 
-        {/* Amount */}
-        <div className="mt-6 bg-orange-50 rounded-2xl p-4 text-center border border-orange-100">
-          <p className="text-xs text-orange-500 font-semibold uppercase tracking-wider">Total Amount</p>
-          <p className="text-4xl font-bold text-orange-600 mt-1">₹{order.sellingPrice.toLocaleString('en-IN')}</p>
+        <div className="mt-6 bg-violet-50 rounded-2xl p-4 text-center border border-violet-100">
+          <p className="text-xs text-violet-500 font-semibold uppercase tracking-wider">Total Amount</p>
+          <p className="text-4xl font-bold text-violet-700 mt-1">₹{order.sellingPrice.toLocaleString('en-IN')}</p>
         </div>
 
-        {/* UPI Pay Button */}
         {order.paymentStatus === 'Pending' && (
-          <a
-            href={upiLink}
-            className="mt-4 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-2xl transition-all"
-          >
+          <a href={upiLink} className="mt-4 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-2xl transition-all">
             <span>💳</span> Pay ₹{order.sellingPrice} via UPI
           </a>
         )}
 
-        {/* Cake Image */}
         {order.cakeImageURL && (
           <div className="mt-4">
             <img src={order.cakeImageURL} alt="Your cake" className="w-full rounded-2xl object-contain bg-gray-50" />
           </div>
         )}
 
-        {/* Footer */}
-        <div className="mt-6 text-center border-t border-dashed border-gray-200 pt-4">
+        <div className="mt-6 text-center border-t border-dashed border-violet-100 pt-4">
           <p className="text-xs text-gray-400">Thank you for your order! 🙏</p>
-          <Link
-            to={`/feedback/${order._id}`}
-            className="mt-3 inline-block text-sm text-orange-500 hover:underline font-medium"
-          >
+          <Link to={`/feedback/${order._id}`} className="mt-3 inline-block text-sm text-violet-600 hover:underline font-medium">
             ⭐ Leave a Review
           </Link>
         </div>
       </div>
 
-      {/* Actions */}
       <div className="mt-4 flex gap-3 print:hidden">
-        <button
-          onClick={() => {
-            document.title = `Receipt - ${order.customerName}`;
-            window.print();
-          }}
-          className="btn-primary flex-1"
-        >
+        <button onClick={() => { document.title = `Receipt - ${order.customerName}`; window.print(); }} className="btn-primary flex-1">
           ⬇️ Download / Print Receipt
         </button>
       </div>

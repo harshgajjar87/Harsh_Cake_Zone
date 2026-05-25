@@ -135,7 +135,7 @@ export default function Expenses() {
           const found = summary.find((s) => s._id === cat);
           return (
             <button key={cat} onClick={() => setFilterCat(filterCat === cat ? '' : cat)}
-              className={`card text-left transition-all border-2 ${filterCat === cat ? 'border-orange-400' : 'border-transparent'}`}>
+              className={`card text-left transition-all border-2 ${filterCat === cat ? 'border-violet-500' : 'border-transparent'}`}>
               <p className="text-xs text-gray-500">{cat}</p>
               <p className="font-bold text-lg">₹{(found?.total || 0).toLocaleString('en-IN')}</p>
               <p className="text-xs text-gray-400">{found?.count || 0} entries</p>
@@ -146,7 +146,7 @@ export default function Expenses() {
 
       {/* Add Expense Form */}
       <div className="card">
-        <h2 className="font-semibold mb-4 text-orange-600">Add Expense</h2>
+        <h2 className="font-semibold mb-4 text-violet-700">Add Expense</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input className="input" placeholder="Material / Item Name *" required value={form.materialName} onChange={(e) => setForm({ ...form, materialName: e.target.value })} />
           <input className="input" type="number" placeholder="Amount Spent (₹) *" required value={form.amountSpent} onChange={(e) => setForm({ ...form, amountSpent: e.target.value })} />
@@ -155,7 +155,7 @@ export default function Expenses() {
           </select>
           <input className="input" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
           <input className="input sm:col-span-2" placeholder="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-          <div className="sm:col-span-2 border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer hover:border-orange-300 transition-all"
+          <div className="sm:col-span-2 border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer hover:border-violet-400 transition-all"
             onClick={() => document.getElementById('billInput').click()}>
             <input id="billInput" type="file" accept="image/*" className="hidden" onChange={(e) => setBillImage(e.target.files[0])} />
             {billImage
@@ -233,7 +233,7 @@ export default function Expenses() {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <p className="font-bold text-red-600">₹{exp.amountSpent.toLocaleString('en-IN')}</p>
-                  <button className="text-gray-400 hover:text-orange-500 transition-colors" onClick={() => startEdit(exp)} aria-label="Edit">✏️</button>
+                  <button className="text-gray-400 hover:text-violet-600 transition-colors" onClick={() => startEdit(exp)} aria-label="Edit">✏️</button>
                   <button className="text-gray-300 hover:text-red-400 transition-colors" onClick={() => deleteExpense(exp._id)} aria-label="Delete">✕</button>
                 </div>
               </div>

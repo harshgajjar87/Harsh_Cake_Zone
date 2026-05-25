@@ -26,29 +26,19 @@ export default function Gallery() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Lightbox */}
       {selected && (
-        <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelected(null)}
-        >
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
           <div className="relative max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
             <img src={selected.url} alt={selected.name} className="w-full rounded-2xl object-contain max-h-[80vh]" />
             <p className="text-white text-center mt-3 text-sm font-medium">{selected.name}</p>
-            <button
-              className="absolute top-2 right-2 bg-white/20 hover:bg-white/40 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg"
-              onClick={() => setSelected(null)}
-            >
-              ×
-            </button>
+            <button className="absolute top-2 right-2 bg-white/20 hover:bg-white/40 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg" onClick={() => setSelected(null)}>×</button>
           </div>
         </div>
       )}
 
-      {/* Header */}
       <div className="text-center mb-8">
         <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-2" />
-        <h1 className="text-2xl font-bold text-orange-600">Harsh Cake Zone</h1>
+        <h1 className="text-2xl font-bold text-violet-700">Harsh Cake Zone</h1>
         <p className="text-gray-400 text-sm mt-1">Our Cake Gallery</p>
       </div>
 
@@ -57,11 +47,7 @@ export default function Gallery() {
       ) : (
         <div className="columns-2 sm:columns-3 gap-3 space-y-3">
           {images.map((img, i) => (
-            <div
-              key={i}
-              className="break-inside-avoid cursor-pointer rounded-2xl overflow-hidden shadow hover:shadow-md transition-shadow"
-              onClick={() => setSelected(img)}
-            >
+            <div key={i} className="break-inside-avoid cursor-pointer rounded-2xl overflow-hidden shadow hover:shadow-md transition-shadow" onClick={() => setSelected(img)}>
               <img src={img.url} alt={img.name} className="w-full object-cover" />
             </div>
           ))}
