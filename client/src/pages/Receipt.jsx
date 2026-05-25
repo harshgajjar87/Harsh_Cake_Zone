@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import logo from '../image/image.png';
 
 export default function Receipt() {
   const { token } = useParams();
@@ -32,7 +33,7 @@ export default function Receipt() {
       <div className="card border border-orange-100 print:shadow-none" id="receipt">
         {/* Header */}
         <div className="text-center border-b border-dashed border-gray-200 pb-6 mb-6">
-          <div className="text-4xl mb-2">🎂</div>
+          <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-2" />
           <h1 className="text-2xl font-bold text-orange-600">Harsh Cake Zone</h1>
           <p className="text-xs text-gray-400 mt-1">Digital Receipt</p>
         </div>

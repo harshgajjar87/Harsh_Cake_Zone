@@ -12,6 +12,7 @@ import Receipt from './pages/Receipt';
 import FeedbackPage from './pages/FeedbackPage';
 import Gallery from './pages/Gallery';
 import Login from './pages/Login';
+import logo from './image/image.png';
 
 import useTheme from './hooks/useTheme';
 function Layout({ children, isAuth, onLogout, dark, toggleTheme }) {
@@ -38,6 +39,8 @@ export default function App() {
   const [dark, toggleTheme] = useTheme();
 
   useEffect(() => {
+    // Wake up Render server immediately on page load
+    axios.get('/api/ping').catch(() => {});
     const token = localStorage.getItem('hcz_token');
     if (!token) { setChecking(false); return; }
     axios.post('/api/auth/verify', { token })
@@ -54,7 +57,7 @@ export default function App() {
 
   if (checking) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-4xl animate-pulse">🎂</div>
+      <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover animate-pulse" />
     </div>
   );
 

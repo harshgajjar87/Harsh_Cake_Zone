@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../image/image.png';
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '📊' },
@@ -43,7 +44,7 @@ export default function Navbar({ onLogout, dark, toggleTheme }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">🎂</span>
+            <img src={logo} alt="Harsh Cake Zone" className="w-8 h-8 rounded-full object-cover" />
             <span className="font-bold text-xl text-orange-600">Harsh Cake Zone</span>
             <span className="hidden sm:block text-xs text-gray-400 font-medium ml-1">Bakery Suite</span>
           </Link>

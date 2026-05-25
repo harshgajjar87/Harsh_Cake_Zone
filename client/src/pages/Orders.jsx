@@ -95,6 +95,7 @@ export default function Orders() {
         `Hi *${o.customerName}* 👋\n` +
         `Your cake is ready! 🎂\n\n` +
         `*${o.cakeDetails}* — ₹${o.sellingPrice}\n\n` +
+        (o.cakeImageURL ? `🖼️ Your cake photo:\n${o.cakeImageURL}\n\n` : '') +
         `💳 Pay via UPI:\n${upiLink}\n\n` +
         `Thank you for trusting us! 🙏\n` +
         `— Harsh Cake Zone`;

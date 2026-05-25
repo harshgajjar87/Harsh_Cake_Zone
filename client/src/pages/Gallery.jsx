@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import logo from '../image/image.png';
 
 export default function Gallery() {
   const [images, setImages] = useState([]);
@@ -46,7 +47,7 @@ export default function Gallery() {
 
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="text-4xl mb-2">🎂</div>
+        <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-2" />
         <h1 className="text-2xl font-bold text-orange-600">Harsh Cake Zone</h1>
         <p className="text-gray-400 text-sm mt-1">Our Cake Gallery</p>
       </div>
