@@ -63,18 +63,19 @@ function loadMenu() {
 
 export default function MenuPage() {
   const [active, setActive] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const MENU = loadMenu();
 
   return (
     <div className="min-h-screen bg-[#f5f3ff] font-sans">
       {/* Navbar */}
       <nav className="bg-white/90 backdrop-blur border-b border-orange-100 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Logo" className="w-8 h-8 rounded-full object-cover" />
             <span className="font-bold text-orange-700">Harsh Cake Zone</span>
           </Link>
-          <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+          <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-600">
             <Link to="/" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Home</Link>
             <Link to="/gallery" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Gallery</Link>
             <Link to="/our-reviews" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Reviews</Link>
@@ -83,7 +84,26 @@ export default function MenuPage() {
               💬 Order Now
             </a>
           </div>
+          <button className="sm:hidden p-2 rounded-xl text-gray-500 hover:bg-orange-50" onClick={() => setMenuOpen(!menuOpen)}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {menuOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+            </svg>
+          </button>
         </div>
+        {menuOpen && (
+          <div className="sm:hidden bg-white border-t border-orange-50 px-4 pb-3 space-y-1">
+            {[['/', 'Home'], ['/gallery', 'Gallery'], ['/our-reviews', 'Reviews']].map(([to, label]) => (
+              <Link key={to} to={to} onClick={() => setMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
+            ))}
+            <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-2.5 rounded-xl text-sm font-medium text-green-600 hover:bg-green-50">
+              💬 Order Now
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* Header */}
@@ -125,12 +145,19 @@ export default function MenuPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {cat.items.map((item) => (
-                <div key={item.name} className="bg-white rounded-2xl p-5 shadow-sm border border-orange-50 flex justify-between items-start gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                  <div>
-                    <h3 className="font-bold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                <div key={item.name} className="bg-white rounded-2xl shadow-sm border border-orange-50 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex gap-3 items-start p-4">
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} className="w-16 h-16 rounded-xl object-cover flex-shrink-0 border border-orange-100" />
+                  ) : (
+                    <div className="w-16 h-16 rounded-xl bg-orange-50 flex items-center justify-center text-2xl flex-shrink-0">🎂</div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-2">
+                      <h3 className="font-bold text-gray-800 text-sm">{item.name}</h3>
+                      <span className="text-orange-700 font-bold text-xs whitespace-nowrap bg-orange-50 px-2 py-1 rounded-lg flex-shrink-0">{item.price}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
                   </div>
-                  <span className="text-orange-700 font-bold text-sm whitespace-nowrap bg-orange-50 px-3 py-1 rounded-xl">{item.price}</span>
                 </div>
               ))}
             </div>

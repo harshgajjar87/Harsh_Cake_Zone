@@ -27,9 +27,9 @@ const STANDALONE = ['/', '/menu', '/our-reviews', '/gallery'];
 function Layout({ children, isAuth, onLogout, dark, toggleTheme }) {
   const { pathname } = useLocation();
   const isReceipt = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/');
-  // Standalone: public pages that have their own navbar
-  // But if admin is logged in and visits /gallery, we want the admin navbar
-  const isStandalone = (STANDALONE.includes(pathname) && !isAuth) || isReceipt;
+  // Public pages always use their own navbar, except /gallery shows admin navbar when logged in
+  const isPublicPage = STANDALONE.includes(pathname);
+  const isStandalone = (isPublicPage && pathname !== '/gallery') || (pathname === '/gallery' && !isAuth) || isReceipt;
 
   return (
     <div className={`min-h-screen transition-colors ${isStandalone ? '' : 'bg-[#fdf8f6] dark:bg-[#18100e]'}`}>

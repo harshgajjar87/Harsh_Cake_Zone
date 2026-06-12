@@ -7,6 +7,7 @@ export default function PublicReviews() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     axios.get('/api/feedback').then(({ data }) => {
@@ -19,33 +20,47 @@ export default function PublicReviews() {
   return (
     <div className="min-h-screen bg-[#f5f3ff] font-sans">
       {/* Navbar */}
-      <nav className="bg-white/90 backdrop-blur border-b border-orange-100 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <nav className="bg-white/90 backdrop-blur border-b border-orange-100 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Logo" className="w-8 h-8 rounded-full object-cover" />
             <span className="font-bold text-orange-700">Harsh Cake Zone</span>
           </Link>
-          <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+          <div className="hidden sm:flex items-center gap-1 text-sm font-medium text-gray-600">
             <Link to="/" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Home</Link>
             <Link to="/menu" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Menu</Link>
             <Link to="/gallery" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Gallery</Link>
           </div>
+          <button className="sm:hidden p-2 rounded-xl text-gray-500 hover:bg-orange-50" onClick={() => setMenuOpen(!menuOpen)}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {menuOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+            </svg>
+          </button>
         </div>
+        {menuOpen && (
+          <div className="sm:hidden bg-white border-t border-orange-50 px-4 pb-3 space-y-1">
+            {[['/', 'Home'], ['/menu', 'Menu'], ['/gallery', 'Gallery']].map(([to, label]) => (
+              <Link key={to} to={to} onClick={() => setMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-orange-700 to-rose-600 text-white text-center py-16 px-4">
-        <div className="text-5xl mb-4">⭐</div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-2">Customer Reviews</h1>
+      <div className="bg-gradient-to-br from-orange-700 to-rose-600 text-white text-center py-8 px-4">
+        <div className="text-3xl mb-2">⭐</div>
+        <h1 className="text-2xl sm:text-4xl font-extrabold mb-1">Customer Reviews</h1>
         {avgRating > 0 && (
-          <div className="flex items-center justify-center gap-2 mt-3">
+          <div className="flex items-center justify-center gap-2 mt-2">
             <div className="flex gap-0.5">
               {[1,2,3,4,5].map((s) => (
-                <span key={s} className={`text-2xl ${s <= Math.round(avgRating) ? 'text-yellow-300' : 'text-white/30'}`}>★</span>
+                <span key={s} className={`text-lg ${s <= Math.round(avgRating) ? 'text-yellow-300' : 'text-white/30'}`}>★</span>
               ))}
             </div>
-            <span className="text-3xl font-bold text-yellow-300">{avgRating}</span>
-            <span className="text-white/60">/ 5 · {feedbacks.length} reviews</span>
+            <span className="text-xl font-bold text-yellow-300">{avgRating}</span>
+            <span className="text-white/60 text-sm">/ 5 · {feedbacks.length} reviews</span>
           </div>
         )}
       </div>

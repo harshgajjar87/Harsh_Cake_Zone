@@ -160,14 +160,14 @@ export default function LandingPage() {
       <section className="relative overflow-hidden pt-16 bg-gradient-to-br from-[#f5f3ff] via-white to-rose-50">
         <FloatingDecor />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6 lg:py-16">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4 pb-6 lg:py-16">
 
           {/* ── Left: Content ── */}
-          <div style={{ animation: 'fadeUp 0.8s ease forwards' }}>
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left" style={{ animation: 'fadeUp 0.8s ease forwards' }}>
             {/* Logo badge */}
             <div className="flex items-center gap-2 mb-3">
               <img src={logo} alt="Harsh Cake Zone" className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-lg ring-2 ring-orange-100" />
-              <div>
+              <div className="text-left">
                 <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest">Harsh Cake Zone</p>
                 <p className="text-xs text-gray-500">Handcrafted with love</p>
               </div>
@@ -186,7 +186,7 @@ export default function LandingPage() {
               Handcrafted cakes made with love for birthdays, weddings & every sweet moment that deserves to be remembered.
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4 justify-center lg:justify-start">
               <Link to="/menu" className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-orange-700 hover:bg-orange-800 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg hover:-translate-y-0.5 transition-all">
                 🍰 View Our Menu
               </Link>
@@ -200,7 +200,7 @@ export default function LandingPage() {
             </div>
 
             {/* Social links */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-center lg:justify-start">
               <span className="text-xs text-gray-400 font-medium">Follow us:</span>
               <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
                 className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center transition-all shadow-sm">
@@ -218,7 +218,7 @@ export default function LandingPage() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-4 mt-4 pt-4 border-t border-orange-100">
+            <div className="flex gap-4 mt-4 pt-4 border-t border-orange-100 justify-center lg:justify-start">
               {[['500+', 'Happy Customers'], ['5★', 'Rated'], ['100%', 'Fresh']].map(([val, label]) => (
                 <div key={label}>
                   <p className="text-lg sm:text-2xl font-extrabold text-orange-700">{val}</p>
@@ -295,24 +295,30 @@ export default function LandingPage() {
       </div>
 
       {/* ── Why Choose Us ── */}
-      <section className="py-20 bg-[#f5f3ff]">
-        <div className="max-w-6xl mx-auto px-4">
-          <AnimatedSection className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-orange-900 mb-3">Why Choose Us?</h2>
-            <p className="text-gray-500 max-w-xl mx-auto">We put heart into every layer, every swirl, every bite.</p>
+      <section className="py-16 relative overflow-hidden bg-gradient-to-b from-[#f5f3ff] to-white">
+        {/* Background decoration */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden>
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-orange-100/60 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 -left-16 w-56 h-56 bg-rose-100/50 rounded-full blur-2xl" />
+        </div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <AnimatedSection className="text-center mb-10">
+            <span className="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-4 py-1.5 rounded-full mb-3 uppercase tracking-widest">Why Us</span>
+            <h2 className="text-2xl sm:text-4xl font-bold text-orange-900 mb-2">Baked with Purpose</h2>
+            <p className="text-gray-500 max-w-xl mx-auto text-sm sm:text-base">We put heart into every layer, every swirl, every bite.</p>
           </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: '🎨', title: 'Custom Designs', desc: 'Every cake is uniquely crafted to match your vision and theme.' },
-              { icon: '🌿', title: 'Fresh Ingredients', desc: 'Only the finest quality ingredients, sourced fresh every day.' },
-              { icon: '⏰', title: 'On-Time Delivery', desc: 'We take your special moments seriously — always on time.' },
-              { icon: '💕', title: 'Made with Love', desc: 'Baked with passion and care in every single order.' },
+              { icon: '🎨', title: 'Custom Designs', desc: 'Crafted to match your vision and theme.', color: 'from-orange-50 to-orange-100/60', border: 'border-orange-100' },
+              { icon: '🌿', title: 'Fresh Ingredients', desc: 'Finest quality, sourced fresh every day.', color: 'from-green-50 to-emerald-100/60', border: 'border-green-100' },
+              { icon: '⏰', title: 'On-Time Delivery', desc: 'We take your special moments seriously.', color: 'from-blue-50 to-sky-100/60', border: 'border-blue-100' },
+              { icon: '💕', title: 'Made with Love', desc: 'Passion and care in every single order.', color: 'from-rose-50 to-pink-100/60', border: 'border-rose-100' },
             ].map((f, i) => (
               <AnimatedSection key={i} delay={i * 100}>
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-50 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                  <div className="text-4xl mb-3">{f.icon}</div>
-                  <h3 className="font-bold text-orange-800 mb-1">{f.title}</h3>
-                  <p className="text-sm text-gray-500">{f.desc}</p>
+                <div className={`bg-gradient-to-br ${f.color} rounded-2xl p-5 border ${f.border} text-center hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 h-full`}>
+                  <div className="text-3xl mb-2">{f.icon}</div>
+                  <h3 className="font-bold text-gray-800 mb-1 text-sm">{f.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
                 </div>
               </AnimatedSection>
             ))}
@@ -322,17 +328,23 @@ export default function LandingPage() {
 
       {/* ── Gallery Preview ── */}
       {images.length > 0 && (
-        <section className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4">
-            <AnimatedSection className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-orange-900 mb-3">Our Creations</h2>
-              <p className="text-gray-500">A glimpse of the magic we bake.</p>
+        <section className="py-16 relative overflow-hidden bg-gradient-to-br from-orange-900 via-orange-800 to-rose-800">
+          {/* Decorative blobs */}
+          <div className="absolute inset-0 pointer-events-none" aria-hidden>
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 -translate-y-1/3" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/3 translate-y-1/3" />
+          </div>
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <AnimatedSection className="text-center mb-8">
+              <span className="inline-block bg-white/10 text-orange-200 text-xs font-bold px-4 py-1.5 rounded-full mb-3 uppercase tracking-widest border border-white/10">Gallery</span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">Our Creations</h2>
+              <p className="text-orange-200 text-sm">A glimpse of the magic we bake.</p>
             </AnimatedSection>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {images.map((src, i) => (
                 <AnimatedSection key={i} delay={i * 60}>
                   <Link to="/gallery">
-                    <div className="aspect-square rounded-2xl overflow-hidden group cursor-pointer">
+                    <div className="aspect-square rounded-2xl overflow-hidden group cursor-pointer ring-2 ring-white/10 hover:ring-orange-300 transition-all duration-300">
                       <img src={src} alt="cake" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     </div>
                   </Link>
@@ -340,7 +352,7 @@ export default function LandingPage() {
               ))}
             </div>
             <AnimatedSection className="text-center mt-8">
-              <Link to="/gallery" className="inline-flex items-center gap-2 px-6 py-3 bg-orange-700 hover:bg-orange-800 text-white font-semibold rounded-2xl transition-all hover:-translate-y-0.5 shadow-md">
+              <Link to="/gallery" className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-bold rounded-2xl transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-orange-900/30">
                 View Full Gallery →
               </Link>
             </AnimatedSection>
@@ -350,10 +362,15 @@ export default function LandingPage() {
 
       {/* ── Reviews ── */}
       {reviews.length > 0 && (
-        <section className="py-20 bg-[#f5f3ff]">
-          <div className="max-w-6xl mx-auto px-4">
-            <AnimatedSection className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-orange-900 mb-2">What Customers Say</h2>
+        <section className="py-16 relative overflow-hidden bg-gradient-to-b from-white to-[#f5f3ff]">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden>
+            <div className="absolute top-10 left-0 w-64 h-64 bg-yellow-100/50 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-56 h-56 bg-orange-100/40 rounded-full blur-2xl" />
+          </div>
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <AnimatedSection className="text-center mb-10">
+              <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-bold px-4 py-1.5 rounded-full mb-3 uppercase tracking-widest">Reviews</span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-orange-900 mb-2">What Customers Say</h2>
               <div className="flex items-center justify-center gap-2 mt-2">
                 <div className="flex gap-0.5">
                   {[1,2,3,4,5].map((s) => <span key={s} className={`text-xl ${s <= Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-200'}`}>★</span>)}
@@ -362,15 +379,21 @@ export default function LandingPage() {
                 <span className="text-gray-400 text-sm">/ 5</span>
               </div>
             </AnimatedSection>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {reviews.map((r, i) => (
                 <AnimatedSection key={r._id} delay={i * 80}>
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-orange-50 flex flex-col gap-3 hover:shadow-md transition-all">
-                    <div className="flex gap-0.5">
+                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-orange-50 flex flex-col gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-50 rounded-bl-3xl" />
+                    <div className="flex gap-0.5 relative z-10">
                       {[1,2,3,4,5].map((s) => <span key={s} className={`text-base ${s <= r.rating ? 'text-yellow-400' : 'text-gray-200'}`}>★</span>)}
                     </div>
-                    {r.comment && <p className="text-sm text-gray-600 italic">"{r.comment}"</p>}
-                    <p className="text-sm font-semibold text-orange-700">{r.customerName}</p>
+                    {r.comment && <p className="text-sm text-gray-600 italic leading-relaxed">"{r.comment}"</p>}
+                    <div className="flex items-center gap-2 mt-auto pt-2 border-t border-orange-50">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-rose-400 flex items-center justify-center text-white text-xs font-bold">
+                        {r.customerName?.[0]?.toUpperCase()}
+                      </div>
+                      <p className="text-sm font-semibold text-orange-700">{r.customerName}</p>
+                    </div>
                   </div>
                 </AnimatedSection>
               ))}
@@ -385,21 +408,23 @@ export default function LandingPage() {
       )}
 
       {/* ── CTA ── */}
-      <section className="py-24 bg-gradient-to-br from-orange-700 to-rose-600 text-white text-center px-4 relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-orange-700 via-rose-600 to-pink-600 text-white text-center px-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/2 translate-y-1/2" />
+          <div className="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/2 translate-y-1/2" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/5 rounded-full" />
         </div>
         <AnimatedSection className="relative z-10">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Ready to Order Your Dream Cake?</h2>
-          <p className="text-white/80 mb-8 max-w-lg mx-auto">Contact us today and let's create something sweet together.</p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="text-4xl mb-4">🎂</div>
+          <h2 className="text-2xl sm:text-4xl font-extrabold mb-3">Ready to Order Your Dream Cake?</h2>
+          <p className="text-white/80 mb-8 max-w-lg mx-auto text-sm sm:text-base">Contact us today and let's create something sweet together.</p>
+          <div className="flex flex-wrap justify-center gap-3">
             <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-green-400 hover:bg-green-300 text-gray-900 font-bold rounded-2xl shadow-lg transition-all hover:-translate-y-0.5 text-base">
+              className="inline-flex items-center gap-2 px-6 py-3 bg-green-400 hover:bg-green-300 text-gray-900 font-bold rounded-2xl shadow-lg transition-all hover:-translate-y-0.5">
               <WhatsAppIcon /> Order on WhatsApp
             </a>
             <a href="https://www.instagram.com/harsh_cake_zone/" target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-bold rounded-2xl border border-white/30 transition-all hover:-translate-y-0.5 text-base">
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/15 hover:bg-white/25 text-white font-bold rounded-2xl border border-white/30 transition-all hover:-translate-y-0.5">
               <InstagramIcon /> Follow on Instagram
             </a>
           </div>
