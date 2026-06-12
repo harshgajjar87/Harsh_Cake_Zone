@@ -107,7 +107,7 @@ export default function LandingPage() {
   }, [images]);
 
   return (
-    <div className="min-h-screen bg-white font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5f3ff] via-white to-rose-50 font-sans overflow-x-hidden">
 
       {/* ── Keyframes injected via style tag ── */}
       <style>{`
@@ -157,71 +157,71 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO — Split layout ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16 bg-gradient-to-br from-[#f5f3ff] via-white to-rose-50">
+      <section className="relative overflow-hidden pt-16 bg-gradient-to-br from-[#f5f3ff] via-white to-rose-50">
         <FloatingDecor />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 w-full grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-16 lg:py-0 min-h-[calc(100vh-64px)]">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6 lg:py-16">
 
           {/* ── Left: Content ── */}
           <div style={{ animation: 'fadeUp 0.8s ease forwards' }}>
             {/* Logo badge */}
-            <div className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover shadow-lg ring-4 ring-orange-100" />
+            <div className="flex items-center gap-2 mb-3">
+              <img src={logo} alt="Harsh Cake Zone" className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-lg ring-2 ring-orange-100" />
               <div>
                 <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest">Harsh Cake Zone</p>
-                <p className="text-sm text-gray-500">Handcrafted with love</p>
+                <p className="text-xs text-gray-500">Handcrafted with love</p>
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-orange-200">
+            <div className="inline-flex items-center gap-1.5 bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full mb-3 border border-orange-200">
               🎂 Custom Cakes • Fresh Daily • Made to Order
             </div>
 
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-5">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-3">
               Every Cake<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-rose-400">Tells a Story</span>
             </h1>
 
-            <p className="text-gray-500 text-lg mb-8 max-w-md leading-relaxed">
+            <p className="text-gray-500 text-sm sm:text-base mb-4 max-w-md leading-relaxed">
               Handcrafted cakes made with love for birthdays, weddings & every sweet moment that deserves to be remembered.
             </p>
 
-            <div className="flex flex-wrap gap-3 mb-10">
-              <Link to="/menu" className="px-7 py-3.5 bg-orange-700 hover:bg-orange-800 text-white font-bold rounded-2xl text-sm shadow-lg hover:shadow-orange-200 hover:-translate-y-0.5 transition-all">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Link to="/menu" className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-orange-700 hover:bg-orange-800 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg hover:-translate-y-0.5 transition-all">
                 🍰 View Our Menu
               </Link>
-              <Link to="/gallery" className="px-7 py-3.5 bg-white text-orange-700 font-bold rounded-2xl text-sm shadow-sm border-2 border-orange-200 hover:border-orange-400 hover:-translate-y-0.5 transition-all">
+              <Link to="/gallery" className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-white text-orange-700 font-bold rounded-xl text-xs sm:text-sm shadow-sm border-2 border-orange-200 hover:border-orange-400 hover:-translate-y-0.5 transition-all">
                 🖼️ See Gallery
               </Link>
               <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
-                className="px-7 py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-2xl text-sm shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-1.5">
                 <WhatsAppIcon /> Order Now
               </a>
             </div>
 
             {/* Social links */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <span className="text-xs text-gray-400 font-medium">Follow us:</span>
               <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
-                className="w-9 h-9 bg-green-500 hover:bg-green-600 text-white rounded-xl flex items-center justify-center transition-all hover:-translate-y-0.5 shadow-sm">
+                className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center justify-center transition-all shadow-sm">
                 <WhatsAppIcon />
               </a>
               <a href="https://www.instagram.com/harsh_cake_zone/" target="_blank" rel="noreferrer"
-                className="w-9 h-9 text-white rounded-xl flex items-center justify-center transition-all hover:-translate-y-0.5 shadow-sm"
+                className="w-8 h-8 text-white rounded-lg flex items-center justify-center transition-all shadow-sm"
                 style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }}>
                 <InstagramIcon />
               </a>
               <a href="https://www.facebook.com/profile.php?id=61572345472233" target="_blank" rel="noreferrer"
-                className="w-9 h-9 bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-xl flex items-center justify-center transition-all hover:-translate-y-0.5 shadow-sm">
+                className="w-8 h-8 bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-lg flex items-center justify-center transition-all shadow-sm">
                 <FacebookIcon />
               </a>
             </div>
 
             {/* Stats */}
-            <div className="flex gap-6 mt-8 pt-8 border-t border-orange-100">
-              {[['500+', 'Happy Customers'], ['5★', 'Rated Experience'], ['100%', 'Fresh Ingredients']].map(([val, label]) => (
+            <div className="flex gap-4 mt-4 pt-4 border-t border-orange-100">
+              {[['500+', 'Happy Customers'], ['5★', 'Rated'], ['100%', 'Fresh']].map(([val, label]) => (
                 <div key={label}>
-                  <p className="text-2xl font-extrabold text-orange-700">{val}</p>
+                  <p className="text-lg sm:text-2xl font-extrabold text-orange-700">{val}</p>
                   <p className="text-xs text-gray-400 mt-0.5">{label}</p>
                 </div>
               ))}
@@ -231,10 +231,10 @@ export default function LandingPage() {
           {/* ── Right: Photo slideshow ── */}
           <div className="relative flex items-center justify-center" style={{ animation: 'slideInRight 0.9s ease forwards' }}>
             {/* Decorative rings */}
-            <div className="absolute w-80 h-80 rounded-full border-2 border-dashed border-orange-200 animate-[spin_20s_linear_infinite]" />
-            <div className="absolute w-96 h-96 rounded-full border border-orange-100 animate-[spin_30s_linear_infinite_reverse]" />
+            <div className="absolute w-56 h-56 sm:w-80 sm:h-80 rounded-full border-2 border-dashed border-orange-200 animate-[spin_20s_linear_infinite]" />
+            <div className="absolute w-64 h-64 sm:w-96 sm:h-96 rounded-full border border-orange-100 animate-[spin_30s_linear_infinite_reverse]" />
 
-            <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
+            <div className="relative w-52 h-52 sm:w-72 sm:h-72 lg:w-96 lg:h-96">
               {images.length > 0 ? (
                 <>
                   {images.map((src, i) => (
