@@ -76,8 +76,8 @@ function FloatingDecor() {
       ))}
 
       {/* Gradient blobs */}
-      <div className="absolute top-10 left-0 w-72 h-72 bg-orange-400/40 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" />
-      <div className="absolute bottom-20 left-20 w-48 h-48 bg-rose-400/40 rounded-full blur-2xl animate-[pulse_6s_ease-in-out_infinite_1s]" />
+      <div className="absolute top-10 left-0 w-72 h-72 bg-orange-400/40 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-20 w-48 h-48 bg-rose-400/40 rounded-full blur-2xl" />
     </div>
   );
 }
@@ -90,10 +90,9 @@ export default function LandingPage() {
   const [heroIdx, setHeroIdx] = useState(0);
 
   useEffect(() => {
-    axios.get('/api/orders').then(({ data }) => {
+    axios.get('/api/orders/images?limit=6').then(({ data }) => {
       if (data.success) {
-        const imgs = data.data.filter((o) => o.cakeImageURL).map((o) => o.cakeImageURL);
-        setImages(imgs.slice(0, 6));
+        setImages(data.data.map((o) => o.cakeImageURL));
       }
     }).catch(() => {});
     axios.get('/api/feedback').then(({ data }) => {

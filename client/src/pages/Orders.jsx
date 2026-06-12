@@ -265,7 +265,10 @@ export default function Orders() {
               )}
             </div>
             <input className="input" type="number" placeholder="Selling Price (₹) *" required value={form.sellingPrice} onChange={(e) => setForm({ ...form, sellingPrice: e.target.value })} />
-            <input className="input" type="date" value={form.orderDate} onChange={(e) => setForm({ ...form, orderDate: e.target.value })} />
+            <label className="flex flex-col gap-1">
+              <span className="text-xs text-gray-500 font-medium px-1">📅 Order Date</span>
+              <input className="input" type="date" value={form.orderDate} onChange={(e) => setForm({ ...form, orderDate: e.target.value })} />
+            </label>
             <select className="input" value={form.paymentStatus} onChange={(e) => setForm({ ...form, paymentStatus: e.target.value })}>
               <option>Pending</option>
               <option>Paid</option>
@@ -355,7 +358,10 @@ export default function Orders() {
                     <input className="input sm:col-span-2" required placeholder="Cake Details" value={editForm.cakeDetails} onChange={(e) => setEditForm({ ...editForm, cakeDetails: e.target.value })} />
                     <input className="input" placeholder="Weight (e.g. 1kg)" value={editForm.weight} onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })} />
                     <input className="input" type="number" required placeholder="Price (₹)" value={editForm.sellingPrice} onChange={(e) => setEditForm({ ...editForm, sellingPrice: e.target.value })} />
-                    <input className="input" type="date" value={editForm.orderDate} onChange={(e) => setEditForm({ ...editForm, orderDate: e.target.value })} />
+                    <label className="flex flex-col gap-1">
+                      <span className="text-xs text-gray-500 font-medium px-1">📅 Order Date</span>
+                      <input className="input" type="date" value={editForm.orderDate} onChange={(e) => setEditForm({ ...editForm, orderDate: e.target.value })} />
+                    </label>
                     <select className="input" value={editForm.category || 'Cakes'} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}>
                       <option>Cakes</option>
                       <option>Cupcakes</option>

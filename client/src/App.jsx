@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { AppProvider } from './context/AppContext';
 import Navbar from './components/Navbar';
 import Toast from './components/Toast';
-import Dashboard from './pages/Dashboard';
-import Orders from './pages/Orders';
-import Expenses from './pages/Expenses';
-import Reviews from './pages/Reviews';
-import Referrals from './pages/Referrals';
-import Receipt from './pages/Receipt';
-import FeedbackPage from './pages/FeedbackPage';
-import Gallery from './pages/Gallery';
-import Login from './pages/Login';
-import LandingPage from './pages/LandingPage';
-import MenuPage from './pages/MenuPage';
-import AdminMenuPage from './pages/AdminMenuPage';
-import PublicReviews from './pages/PublicReviews';
 import logo from './image/image.png';
 import useTheme from './hooks/useTheme';
+
+const Dashboard    = lazy(() => import('./pages/Dashboard'));
+const Orders       = lazy(() => import('./pages/Orders'));
+const Expenses     = lazy(() => import('./pages/Expenses'));
+const Reviews      = lazy(() => import('./pages/Reviews'));
+const Referrals    = lazy(() => import('./pages/Referrals'));
+const Receipt      = lazy(() => import('./pages/Receipt'));
+const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
+const Gallery      = lazy(() => import('./pages/Gallery'));
+const Login        = lazy(() => import('./pages/Login'));
+const LandingPage  = lazy(() => import('./pages/LandingPage'));
+const MenuPage     = lazy(() => import('./pages/MenuPage'));
+const AdminMenuPage= lazy(() => import('./pages/AdminMenuPage'));
+const PublicReviews= lazy(() => import('./pages/PublicReviews'));
 
 // These pages render their own full-page layout (own navbar, footer)
 const STANDALONE = ['/', '/menu', '/our-reviews', '/gallery'];
@@ -73,7 +74,12 @@ export default function App() {
     <AppProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Layout isAuth={isAuth} onLogout={handleLogout} dark={dark} toggleTheme={toggleTheme}>
-          <Routes>
+          <Suspense fallback={
+            <div className="min-h-screen bg-[#fdf8f6] flex items-center justify-center">
+              <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover animate-pulse" />
+            </div>
+          }>
+            <Routes>
             {/* Public customer routes — standalone layout */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/menu" element={<MenuPage />} />
@@ -95,6 +101,7 @@ export default function App() {
             <Route path="/admin/referrals" element={<ProtectedRoute isAuth={isAuth}><Referrals /></ProtectedRoute>} />
             <Route path="/admin/menu" element={<ProtectedRoute isAuth={isAuth}><AdminMenuPage /></ProtectedRoute>} />
           </Routes>
+          </Suspense>
         </Layout>
       </BrowserRouter>
     </AppProvider>

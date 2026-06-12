@@ -133,12 +133,14 @@ export default function Gallery({ isAdmin = false }) {
   const [lightbox, setLightbox] = useState(null); // { images, index }
 
   useEffect(() => {
-    axios.get('/api/orders')
+    axios.get('/api/orders/images')
       .then(({ data }) => {
         if (data.success) {
-          const imgs = data.data
-            .filter((o) => o.cakeImageURL)
-            .map((o) => ({ url: o.cakeImageURL, name: o.cakeDetails, category: o.category || 'Cakes' }));
+          const imgs = data.data.map((o) => ({
+            url: o.cakeImageURL,
+            name: o.cakeDetails,
+            category: o.category || 'Cakes',
+          }));
           setAllImages(imgs);
         }
       })

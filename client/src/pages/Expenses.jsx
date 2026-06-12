@@ -153,7 +153,10 @@ export default function Expenses() {
           <select className="input" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
             {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
           </select>
-          <input className="input" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-gray-500 font-medium px-1">📅 Expense Date</span>
+            <input className="input" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+          </label>
           <input className="input sm:col-span-2" placeholder="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           <div className="sm:col-span-2 border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer hover:border-orange-400 transition-all"
             onClick={() => document.getElementById('billInput').click()}>
@@ -205,7 +208,10 @@ export default function Expenses() {
                 <select className="input" value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}>
                   {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
                 </select>
-                <input className="input" type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })} />
+                <label className="flex flex-col gap-1">
+                  <span className="text-xs text-gray-500 font-medium px-1">📅 Expense Date</span>
+                  <input className="input" type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value })} />
+                </label>
                 <input className="input sm:col-span-2" placeholder="Notes (optional)" value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
                 <div className="sm:col-span-2 flex gap-2 justify-end">
                   <button type="button" className="btn-secondary text-sm" onClick={() => setEditTarget(null)}>Cancel</button>

@@ -178,13 +178,13 @@ export default function AdminMenuPage() {
       {/* Categories */}
       {menu.map((cat, catIdx) => (
         <div key={cat.category} className="card border border-orange-50">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="text-2xl">{cat.emoji}</span>
             <h2 className="text-lg font-bold text-orange-800">{cat.category}</h2>
-            <span className="text-xs text-gray-400 ml-auto">{cat.items.length} items</span>
+            <span className="text-xs text-gray-400">{cat.items.length} items</span>
             <button
               onClick={() => { if (window.confirm(`Delete category "${cat.category}"?`)) deleteCategory(catIdx); }}
-              className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all"
+              className="ml-auto bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all"
             >
               🗑 Delete Category
             </button>
@@ -220,28 +220,26 @@ export default function AdminMenuPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        {item.image ? (
-                          <img src={item.image} alt={item.name} className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-orange-100" />
-                        ) : (
-                          <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-xl flex-shrink-0">🎂</div>
-                        )}
-                        <div className="min-w-0">
-                          <p className="font-semibold text-gray-800 text-sm">{item.name}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                    <div className="flex gap-3">
+                      {item.image ? (
+                        <img src={item.image} alt={item.name} className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-orange-100" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-xl flex-shrink-0">🎂</div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-800 text-sm">{item.name}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                        <div className="flex items-center gap-2 mt-2 flex-wrap">
+                          <span className="text-orange-700 font-bold text-xs bg-orange-100 px-2 py-1 rounded-lg">{item.price}</span>
+                          <button onClick={() => startEdit(catIdx, itemIdx)}
+                            className="bg-orange-100 hover:bg-orange-200 text-orange-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all">
+                            ✏️ Edit
+                          </button>
+                          <button onClick={() => deleteItem(catIdx, itemIdx)}
+                            className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all">
+                            Delete
+                          </button>
                         </div>
-                      </div>
-                      <span className="text-orange-700 font-bold text-xs whitespace-nowrap bg-orange-100 px-2 py-1 rounded-lg">{item.price}</span>
-                      <div className="flex gap-1 flex-shrink-0">
-                        <button onClick={() => startEdit(catIdx, itemIdx)}
-                          className="bg-orange-100 hover:bg-orange-200 text-orange-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all">
-                          ✏️ Edit
-                        </button>
-                        <button onClick={() => deleteItem(catIdx, itemIdx)}
-                          className="bg-red-100 hover:bg-red-200 text-red-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all">
-                          Delete
-                        </button>
                       </div>
                     </div>
                   )}
