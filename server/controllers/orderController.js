@@ -17,6 +17,20 @@ exports.getOrders = async (req, res) => {
   }
 };
 
+// GET image-only data for gallery/landing (lightweight)
+exports.getImages = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 0;
+    const orders = await Order.find({ cakeImageURL: { $ne: '' } })
+      .select('cakeImageURL cakeDetails category')
+      .sort({ createdAt: -1 })
+      .limit(limit);
+    res.json({ success: true, data: orders });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 // GET single order by ID or receipt token
 exports.getOrder = async (req, res) => {
   try {

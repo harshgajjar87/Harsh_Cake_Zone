@@ -3,6 +3,7 @@ const router = express.Router();
 const { uploadCake } = require('../middleware/cloudinaryUpload');
 const {
   getOrders,
+  getImages,
   getOrder,
   createOrder,
   updateOrderStatus,
@@ -11,6 +12,7 @@ const {
 } = require('../controllers/orderController');
 
 router.get('/', getOrders);
+router.get('/images', getImages);
 router.get('/:id', getOrder);
 router.post('/', uploadCake.single('cakeImage'), createOrder);
 router.patch('/:id/status', updateOrderStatus);
