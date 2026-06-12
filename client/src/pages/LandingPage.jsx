@@ -49,10 +49,10 @@ function FloatingDecor() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
       {/* Large slow-spinning circles */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full border-2 border-orange-200/30 animate-[spin_25s_linear_infinite]" />
-      <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full border border-orange-300/20 animate-[spin_18s_linear_infinite_reverse]" />
-      <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full border-2 border-rose-200/20 animate-[spin_30s_linear_infinite]" />
-      <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full border border-orange-200/25 animate-[spin_22s_linear_infinite_reverse]" />
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full border-2 border-orange-400/60 animate-[spin_25s_linear_infinite]" />
+      <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full border border-orange-500/50 animate-[spin_18s_linear_infinite_reverse]" />
+      <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full border-2 border-rose-400/50 animate-[spin_30s_linear_infinite]" />
+      <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full border border-orange-400/55 animate-[spin_22s_linear_infinite_reverse]" />
 
       {/* Floating emoji elements */}
       {[
@@ -64,7 +64,7 @@ function FloatingDecor() {
         { emoji: '⭐', top: '10%', left: '22%', size: 'text-lg', dur: '6s', delay: '1.5s' },
       ].map((d, i) => (
         <div key={i}
-          className={`absolute ${d.size} opacity-20`}
+          className={`absolute ${d.size} opacity-50`}
           style={{
             top: d.top, left: d.left,
             animation: `float ${d.dur} ease-in-out infinite`,
@@ -76,8 +76,8 @@ function FloatingDecor() {
       ))}
 
       {/* Gradient blobs */}
-      <div className="absolute top-10 left-0 w-72 h-72 bg-orange-200/20 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" />
-      <div className="absolute bottom-20 left-20 w-48 h-48 bg-rose-200/20 rounded-full blur-2xl animate-[pulse_6s_ease-in-out_infinite_1s]" />
+      <div className="absolute top-10 left-0 w-72 h-72 bg-orange-400/40 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" />
+      <div className="absolute bottom-20 left-20 w-48 h-48 bg-rose-400/40 rounded-full blur-2xl animate-[pulse_6s_ease-in-out_infinite_1s]" />
     </div>
   );
 }
@@ -167,7 +167,7 @@ export default function LandingPage() {
           <div style={{ animation: 'fadeUp 0.8s ease forwards' }}>
             {/* Logo badge */}
             <div className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-2xl object-cover shadow-lg ring-4 ring-orange-100" />
+              <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover shadow-lg ring-4 ring-orange-100" />
               <div>
                 <p className="text-xs font-semibold text-orange-500 uppercase tracking-widest">Harsh Cake Zone</p>
                 <p className="text-sm text-gray-500">Handcrafted with love</p>
