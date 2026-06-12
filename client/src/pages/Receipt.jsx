@@ -30,10 +30,10 @@ export default function Receipt() {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="card border border-violet-100 print:shadow-none" id="receipt">
-        <div className="text-center border-b border-dashed border-violet-100 pb-6 mb-6">
+      <div className="card border border-orange-100 print:shadow-none" id="receipt">
+        <div className="text-center border-b border-dashed border-orange-100 pb-6 mb-6">
           <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-2" />
-          <h1 className="text-2xl font-bold text-violet-700">Harsh Cake Zone</h1>
+          <h1 className="text-2xl font-bold text-orange-700">Harsh Cake Zone</h1>
           <p className="text-xs text-gray-400 mt-1">Digital Receipt</p>
         </div>
 
@@ -45,9 +45,9 @@ export default function Receipt() {
           <Row label="Status" value={<span className={order.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{order.paymentStatus}</span>} />
         </div>
 
-        <div className="mt-6 bg-violet-50 rounded-2xl p-4 text-center border border-violet-100">
-          <p className="text-xs text-violet-500 font-semibold uppercase tracking-wider">Total Amount</p>
-          <p className="text-4xl font-bold text-violet-700 mt-1">₹{order.sellingPrice.toLocaleString('en-IN')}</p>
+        <div className="mt-6 bg-orange-50 rounded-2xl p-4 text-center border border-orange-100">
+          <p className="text-xs text-orange-500 font-semibold uppercase tracking-wider">Total Amount</p>
+          <p className="text-4xl font-bold text-orange-700 mt-1">₹{order.sellingPrice.toLocaleString('en-IN')}</p>
         </div>
 
         {order.paymentStatus === 'Pending' && (
@@ -62,9 +62,9 @@ export default function Receipt() {
           </div>
         )}
 
-        <div className="mt-6 text-center border-t border-dashed border-violet-100 pt-4">
+        <div className="mt-6 text-center border-t border-dashed border-orange-100 pt-4">
           <p className="text-xs text-gray-400">Thank you for your order! 🙏</p>
-          <Link to={`/feedback/${order._id}`} className="mt-3 inline-block text-sm text-violet-600 hover:underline font-medium">
+          <Link to={`/feedback/${order._id}`} className="mt-3 inline-block text-sm text-orange-600 hover:underline font-medium">
             ⭐ Leave a Review
           </Link>
         </div>
@@ -87,3 +87,4 @@ function Row({ label, value }) {
     </div>
   );
 }
+

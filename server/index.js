@@ -20,6 +20,8 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/feedback', require('./routes/feedbackRoutes'));
+app.use('/api/referrers', require('./routes/referrerRoutes'));
+app.use('/api/menu', require('./routes/menuRoutes'));
 
 mongoose
   .connect(process.env.MONGO_URI)

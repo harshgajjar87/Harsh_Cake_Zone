@@ -31,7 +31,7 @@ export default function Reviews() {
       {/* Summary */}
       <div className="card flex flex-col sm:flex-row items-center gap-6">
         <div className="text-center">
-          <p className="text-6xl font-bold text-violet-700">{avgRating || '—'}</p>
+          <p className="text-6xl font-bold text-orange-700">{avgRating || '—'}</p>
           <div className="flex gap-0.5 justify-center mt-1">
             {STARS.map((s) => (
               <span key={s} className={`text-xl ${s <= Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-200'}`}>★</span>
@@ -87,3 +87,4 @@ export default function Reviews() {
     </div>
   );
 }
+

@@ -92,8 +92,8 @@ export default function Dashboard() {
           <p className="text-sm text-gray-500 mt-0.5">Your bakery at a glance</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/orders" className="btn-primary text-sm flex-1 sm:flex-none text-center">+ New Order</Link>
-          <Link to="/expenses" className="btn-secondary text-sm flex-1 sm:flex-none text-center">+ Log Expense</Link>
+          <Link to="/admin/orders" className="btn-primary text-sm flex-1 sm:flex-none text-center">+ New Order</Link>
+          <Link to="/admin/expenses" className="btn-secondary text-sm flex-1 sm:flex-none text-center">+ Log Expense</Link>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export default function Dashboard() {
           Apply
         </button>
         {(startDate || endDate) && (
-          <button className="text-xs text-violet-600 hover:underline whitespace-nowrap" onClick={handleClear}>
+          <button className="text-xs text-orange-600 hover:underline whitespace-nowrap" onClick={handleClear}>
             Clear
           </button>
         )}
@@ -161,7 +161,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-800">Recent Orders</h2>
-            <Link to="/orders" className="text-sm text-violet-600 hover:underline">View all →</Link>
+            <Link to="/admin/orders" className="text-sm text-orange-600 hover:underline">View all →</Link>
           </div>
           <div className="space-y-3">
             {summary.recentOrders.map((o) => (
@@ -184,3 +184,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

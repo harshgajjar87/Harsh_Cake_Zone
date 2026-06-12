@@ -8,29 +8,41 @@ import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Expenses from './pages/Expenses';
 import Reviews from './pages/Reviews';
+import Referrals from './pages/Referrals';
 import Receipt from './pages/Receipt';
 import FeedbackPage from './pages/FeedbackPage';
 import Gallery from './pages/Gallery';
 import Login from './pages/Login';
+import LandingPage from './pages/LandingPage';
+import MenuPage from './pages/MenuPage';
+import AdminMenuPage from './pages/AdminMenuPage';
+import PublicReviews from './pages/PublicReviews';
 import logo from './image/image.png';
-
 import useTheme from './hooks/useTheme';
+
+// These pages render their own full-page layout (own navbar, footer)
+const STANDALONE = ['/', '/menu', '/our-reviews', '/gallery'];
+
 function Layout({ children, isAuth, onLogout, dark, toggleTheme }) {
   const { pathname } = useLocation();
-  const isPublic = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/') || pathname === '/gallery';
+  const isReceipt = pathname.startsWith('/receipt/') || pathname.startsWith('/feedback/');
+  // Standalone: public pages that have their own navbar
+  // But if admin is logged in and visits /gallery, we want the admin navbar
+  const isStandalone = (STANDALONE.includes(pathname) && !isAuth) || isReceipt;
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors">
-      {!isPublic && isAuth && <Navbar onLogout={onLogout} dark={dark} toggleTheme={toggleTheme} />}
+    <div className={`min-h-screen transition-colors ${isStandalone ? '' : 'bg-[#fdf8f6] dark:bg-[#18100e]'}`}>
+      {!isStandalone && isAuth && <Navbar onLogout={onLogout} dark={dark} toggleTheme={toggleTheme} />}
       <Toast />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+      {isStandalone ? children : (
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
+      )}
     </div>
   );
 }
 
 function ProtectedRoute({ isAuth, children }) {
-  return isAuth ? children : <Navigate to="/login" replace />;
+  return isAuth ? children : <Navigate to="/admin" replace />;
 }
 
 export default function App() {
@@ -39,7 +51,6 @@ export default function App() {
   const [dark, toggleTheme] = useTheme();
 
   useEffect(() => {
-    // Wake up Render server immediately on page load
     axios.get('/api/ping').catch(() => {});
     const token = localStorage.getItem('hcz_token');
     if (!token) { setChecking(false); return; }
@@ -50,13 +61,10 @@ export default function App() {
   }, []);
 
   const handleLogin = () => setIsAuth(true);
-  const handleLogout = () => {
-    localStorage.removeItem('hcz_token');
-    setIsAuth(false);
-  };
+  const handleLogout = () => { localStorage.removeItem('hcz_token'); setIsAuth(false); };
 
   if (checking) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-[#fdf8f6] flex items-center justify-center">
       <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover animate-pulse" />
     </div>
   );
@@ -66,19 +74,26 @@ export default function App() {
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Layout isAuth={isAuth} onLogout={handleLogout} dark={dark} toggleTheme={toggleTheme}>
           <Routes>
-            {/* Public routes — customers only */}
+            {/* Public customer routes — standalone layout */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/our-reviews" element={<PublicReviews />} />
             <Route path="/receipt/:token" element={<Receipt />} />
             <Route path="/feedback/:orderId" element={<FeedbackPage />} />
-            <Route path="/gallery" element={<Gallery />} />
 
-            {/* Auth */}
-            <Route path="/login" element={isAuth ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />} />
+            {/* Gallery: public for customers, admin navbar for logged-in admin */}
+            <Route path="/gallery" element={<Gallery isAdmin={isAuth} />} />
 
-            {/* Protected routes */}
-            <Route path="/" element={<ProtectedRoute isAuth={isAuth}><Dashboard /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute isAuth={isAuth}><Orders /></ProtectedRoute>} />
-            <Route path="/expenses" element={<ProtectedRoute isAuth={isAuth}><Expenses /></ProtectedRoute>} />
-            <Route path="/reviews" element={<ProtectedRoute isAuth={isAuth}><Reviews /></ProtectedRoute>} />
+            {/* Admin auth */}
+            <Route path="/admin" element={isAuth ? <Navigate to="/admin/dashboard" replace /> : <Login onLogin={handleLogin} />} />
+
+            {/* Protected admin routes */}
+            <Route path="/admin/dashboard" element={<ProtectedRoute isAuth={isAuth}><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin/orders" element={<ProtectedRoute isAuth={isAuth}><Orders /></ProtectedRoute>} />
+            <Route path="/admin/expenses" element={<ProtectedRoute isAuth={isAuth}><Expenses /></ProtectedRoute>} />
+            <Route path="/admin/reviews" element={<ProtectedRoute isAuth={isAuth}><Reviews /></ProtectedRoute>} />
+            <Route path="/admin/referrals" element={<ProtectedRoute isAuth={isAuth}><Referrals /></ProtectedRoute>} />
+            <Route path="/admin/menu" element={<ProtectedRoute isAuth={isAuth}><AdminMenuPage /></ProtectedRoute>} />
           </Routes>
         </Layout>
       </BrowserRouter>

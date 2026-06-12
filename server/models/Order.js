@@ -20,6 +20,9 @@ const orderSchema = new mongoose.Schema(
     receiptSent: { type: Boolean, default: false },
     reviewSent: { type: Boolean, default: false },
     confirmationSent: { type: Boolean, default: false },
+    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Referrer', default: null },
+    commission: { type: Number, default: 0 },
+    category: { type: String, enum: ['Cakes', 'Cupcakes', 'Chocolates', 'Brownies', 'Other'], default: 'Cakes' },
   },
   { timestamps: true }
 );

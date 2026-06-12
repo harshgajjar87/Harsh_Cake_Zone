@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const Order = require('../models/Order');
+const Referrer = require('../models/Referrer');
+const { getCommissionRate } = require('./referrerController');
 
 // GET all orders
 exports.getOrders = async (req, res) => {
@@ -31,21 +33,33 @@ exports.getOrder = async (req, res) => {
 // POST create order
 exports.createOrder = async (req, res) => {
   try {
-    const { customerName, phone, cakeDetails, weight, sellingPrice, orderDate, paymentStatus } = req.body;
+    const { customerName, phone, cakeDetails, weight, sellingPrice, orderDate, paymentStatus, referredBy } = req.body;
+    const category = req.body.category || 'Cakes';
     const receiptToken = crypto.randomBytes(12).toString('hex');
     const cakeImageURL = req.file ? req.file.path : '';
 
+    const commission = referredBy ? getCommissionRate(weight || '') : 0;
+
     const order = await Order.create({
-      customerName,
-      phone,
-      cakeDetails,
+      customerName, phone, cakeDetails,
       weight: weight || '',
       sellingPrice: parseFloat(sellingPrice),
       orderDate: orderDate ? new Date(orderDate) : new Date(),
       paymentStatus: paymentStatus || 'Pending',
-      cakeImageURL,
-      receiptToken,
+      cakeImageURL, receiptToken,
+      referredBy: referredBy || null,
+      commission,
+      category,
     });
+
+    // Update referrer stats
+    if (referredBy) {
+      const allOrders = await Order.find({ referredBy });
+      await Referrer.findByIdAndUpdate(referredBy, {
+        totalReferrals: allOrders.length,
+        totalCommission: allOrders.reduce((s, o) => s + (o.commission || 0), 0),
+      });
+    }
 
     res.status(201).json({ success: true, data: order });
   } catch (err) {
@@ -83,6 +97,7 @@ exports.updateOrder = async (req, res) => {
     if (sellingPrice) update.sellingPrice = parseFloat(sellingPrice);
     if (orderDate) update.orderDate = new Date(orderDate);
     if (req.file) update.cakeImageURL = req.file.path;
+    if (req.body.category) update.category = req.body.category;
     const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: false });
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     res.json({ success: true, data: order });

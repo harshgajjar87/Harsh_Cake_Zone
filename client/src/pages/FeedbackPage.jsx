@@ -39,7 +39,7 @@ export default function FeedbackPage() {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="card border border-violet-100">
+      <div className="card border border-orange-100">
         <div className="text-center mb-6">
           <div className="text-4xl mb-2">⭐</div>
           <h1 className="text-xl font-bold">How was your experience?</h1>
@@ -66,7 +66,7 @@ export default function FeedbackPage() {
               ))}
             </div>
             {rating > 0 && (
-              <p className="text-sm text-violet-600 mt-1 font-medium">
+              <p className="text-sm text-orange-600 mt-1 font-medium">
                 {['', 'Poor 😞', 'Fair 😐', 'Good 🙂', 'Great 😊', 'Amazing! 🤩'][rating]}
               </p>
             )}
@@ -91,7 +91,7 @@ export default function FeedbackPage() {
               id="recommend"
               checked={wouldRecommend}
               onChange={(e) => setWouldRecommend(e.target.checked)}
-              className="w-4 h-4 accent-violet-600"
+              className="w-4 h-4 accent-orange-600"
             />
             <label htmlFor="recommend" className="text-sm text-gray-600">I would recommend Harsh Cake Zone to friends</label>
           </div>
@@ -106,3 +106,4 @@ export default function FeedbackPage() {
     </div>
   );
 }
+

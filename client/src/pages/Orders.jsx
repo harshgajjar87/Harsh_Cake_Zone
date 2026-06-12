@@ -23,7 +23,8 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+  const [form, setForm] = useState({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending', referredBy: '', category: 'Cakes' });
+  const [referrers, setReferrers] = useState([]);
   const [weightMode, setWeightMode] = useState('preset'); // 'preset' | 'manual'
   const [cakeImage, setCakeImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -37,6 +38,8 @@ export default function Orders() {
   const load = async () => {
     const { data } = await axios.get('/api/orders');
     if (data.success) setOrders(data.data);
+    const ref = await axios.get('/api/referrers');
+    if (ref.data.success) setReferrers(ref.data.data);
     setLoading(false);
   };
 
@@ -64,7 +67,7 @@ export default function Orders() {
       await axios.post('/api/orders', fd);
       showToast('Order created successfully!');
       setShowForm(false);
-      setForm({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending' });
+      setForm({ customerName: '', phone: '', cakeDetails: '', weight: '', sellingPrice: '', orderDate: '', paymentStatus: 'Pending', referredBy: '', category: 'Cakes' });
       setWeightMode('preset');
       setCakeImage(null);
       load();
@@ -169,6 +172,7 @@ export default function Orders() {
       weight: o.weight || '',
       sellingPrice: o.sellingPrice,
       orderDate: new Date(o.orderDate).toLocaleDateString('en-CA'),
+      category: o.category || 'Cakes',
     });
   };
 
@@ -232,8 +236,8 @@ export default function Orders() {
 
       {/* New Order Form */}
       {showForm && (
-        <div className="card border border-violet-100">
-          <h2 className="font-semibold mb-4 text-violet-700">New Order</h2>
+        <div className="card border border-orange-100">
+          <h2 className="font-semibold mb-4 text-orange-700">New Order</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input className="input" placeholder="Customer Name *" required value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
             <input className="input" placeholder="Phone *" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
@@ -266,9 +270,23 @@ export default function Orders() {
               <option>Pending</option>
               <option>Paid</option>
             </select>
+            <select className="input" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <option>Cakes</option>
+              <option>Cupcakes</option>
+              <option>Chocolates</option>
+              <option>Brownies</option>
+              <option>Other</option>
+            </select>
             <div className="sm:col-span-2">
               <label className="text-xs text-gray-500 mb-1 block">Cake Photo (optional)</label>
               <input type="file" accept="image/*" className="input" onChange={(e) => setCakeImage(e.target.files[0])} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-gray-500 mb-1 block">Referred by (optional)</label>
+              <select className="input" value={form.referredBy} onChange={(e) => setForm({ ...form, referredBy: e.target.value })}>
+                <option value="">No referrer</option>
+                {referrers.map((r) => <option key={r._id} value={r._id}>{r.name} — {r.phone}</option>)}
+              </select>
             </div>
             <div className="sm:col-span-2 flex justify-end">
               <button type="submit" className="btn-primary" disabled={submitting}>
@@ -290,7 +308,7 @@ export default function Orders() {
             onChange={(e) => setFilterDate(e.target.value)}
           />
           {filterDate && (
-            <button className="text-xs text-violet-600 hover:underline whitespace-nowrap" onClick={() => setFilterDate('')}>
+            <button className="text-xs text-orange-600 hover:underline whitespace-nowrap" onClick={() => setFilterDate('')}>
               Clear
             </button>
           )}
@@ -338,6 +356,13 @@ export default function Orders() {
                     <input className="input" placeholder="Weight (e.g. 1kg)" value={editForm.weight} onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })} />
                     <input className="input" type="number" required placeholder="Price (₹)" value={editForm.sellingPrice} onChange={(e) => setEditForm({ ...editForm, sellingPrice: e.target.value })} />
                     <input className="input" type="date" value={editForm.orderDate} onChange={(e) => setEditForm({ ...editForm, orderDate: e.target.value })} />
+                    <select className="input" value={editForm.category || 'Cakes'} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}>
+                      <option>Cakes</option>
+                      <option>Cupcakes</option>
+                      <option>Chocolates</option>
+                      <option>Brownies</option>
+                      <option>Other</option>
+                    </select>
                     <div className="sm:col-span-2">
                       <label className="text-xs text-gray-500 mb-1 block">Cake Photo</label>
                       <input type="file" accept="image/*" className="input" onChange={(e) => setEditImage(e.target.files[0])} />
@@ -359,13 +384,14 @@ export default function Orders() {
                           <h3 className="font-semibold">{o.customerName}</h3>
                           <span className={o.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-pending'}>{o.paymentStatus}</span>
                           <span className="badge-ready">{['Received', 'Ready'].includes(o.orderStatus) ? 'In Progress' : o.orderStatus}</span>
+                          {o.commission > 0 && <span className="bg-rose-100 text-rose-700 text-xs font-semibold px-2 py-0.5 rounded-full">💸 ₹{o.commission} commission</span>}
                         </div>
                         <p className="text-sm text-gray-500 mt-0.5 truncate">{o.cakeDetails}{o.weight ? ` · ${o.weight}` : ''}</p>
                         <p className="text-xs text-gray-400 mt-1">📞 {o.phone}</p>
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <p className="text-xl font-bold text-violet-700 sm:text-right">₹{o.sellingPrice}</p>
+                      <p className="text-xl font-bold text-orange-700 sm:text-right">₹{o.sellingPrice}</p>
                       <div className="flex flex-wrap gap-2">
                         {(() => {
                           const normalized = ['Received', 'Ready'].includes(o.orderStatus) ? 'In Progress' : o.orderStatus;
@@ -377,14 +403,14 @@ export default function Orders() {
                           );
                         })()}
                         {!o.confirmationSent ? (
-                          <button className="bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendConfirmation(o)}>
+                          <button className="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => sendConfirmation(o)}>
                             📩 Send Confirmation
                           </button>
                         ) : (
-                          <span className="bg-purple-50 text-purple-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-purple-200">
+                          <span className="bg-rose-50 text-rose-600 text-xs font-semibold px-3 py-1.5 rounded-xl border border-rose-200">
                             ✅ Confirmation Sent
                           </span>
-                        )}                        <button className="bg-violet-100 hover:bg-violet-200 text-violet-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
+                        )}                        <button className="bg-orange-100 hover:bg-orange-200 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-xl" onClick={() => startEdit(o)}>
                           ✏️ Edit
                         </button>
                         {o.paymentStatus === 'Pending' && (
@@ -442,3 +468,4 @@ export default function Orders() {
     </div>
   );
 }
+

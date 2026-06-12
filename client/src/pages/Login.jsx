@@ -28,10 +28,10 @@ export default function Login({ onLogin }) {
   return (
     <div className="min-h-screen bg-[#f5f3ff] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="card border border-violet-100">
+        <div className="card border border-orange-100">
           <div className="text-center mb-8">
             <img src={logo} alt="Harsh Cake Zone" className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
-            <h1 className="text-2xl font-bold text-violet-700">Harsh Cake Zone</h1>
+            <h1 className="text-2xl font-bold text-orange-700">Harsh Cake Zone</h1>
             <p className="text-sm text-gray-400 mt-1">Bakery Management Suite</p>
           </div>
 
@@ -63,3 +63,4 @@ export default function Login({ onLogin }) {
     </div>
   );
 }
+
