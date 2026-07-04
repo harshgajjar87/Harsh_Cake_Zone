@@ -24,6 +24,7 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/feedback', require('./routes/feedbackRoutes'));
 app.use('/api/referrers', require('./routes/referrerRoutes'));
 app.use('/api/menu', require('./routes/menuRoutes'));
+app.use('/api/gallery', require('./routes/galleryRoutes'));
 
 mongoose
   .connect(process.env.MONGO_URI)
