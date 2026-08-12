@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../image/image.png';
+import ownerPhoto from '../image/owner.jpg';
 
 /* ── Intersection observer hook ── */
 function useInView(threshold = 0.15) {
@@ -106,6 +107,21 @@ export default function LandingPage() {
     return () => clearInterval(t);
   }, [images]);
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === '#about') {
+      const el = document.getElementById('about');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        setTimeout(() => {
+          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    }
+  }, [location]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5f3ff] via-white to-rose-50 font-sans overflow-x-hidden">
 
@@ -134,9 +150,28 @@ export default function LandingPage() {
             <span className="font-bold text-lg text-orange-700">Harsh Cake Zone</span>
           </Link>
           <div className="hidden md:flex items-center gap-1">
-            {[['/', 'Home'], ['/menu', 'Menu'], ['/gallery', 'Gallery'], ['/our-reviews', 'Reviews']].map(([to, label]) => (
-              <Link key={to} to={to} className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-orange-700 transition-all">{label}</Link>
-            ))}
+            {[
+              ['/', 'Home'],
+              ['/#about', 'About'],
+              ['/menu', 'Menu'],
+              ['/gallery', 'Gallery'],
+              ['/our-reviews', 'Reviews']
+            ].map(([to, label]) => {
+              if (to.startsWith('/#')) {
+                return (
+                  <a key={to} href={to} onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                      window.history.pushState(null, '', to);
+                    }
+                  }} className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-orange-700 transition-all">{label}</a>
+                );
+              }
+              return (
+                <Link key={to} to={to} className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-orange-50 hover:text-orange-700 transition-all">{label}</Link>
+              );
+            })}
             {/* <Link to="/admin" className="ml-2 px-4 py-2 rounded-xl bg-orange-700 hover:bg-orange-800 text-white text-sm font-semibold transition-all">Admin</Link> */}
           </div>
           <button className="md:hidden p-2 rounded-xl text-gray-500 hover:bg-orange-50" onClick={() => setMenuOpen(!menuOpen)}>
@@ -148,10 +183,31 @@ export default function LandingPage() {
         </div>
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-orange-50 px-4 pb-4 space-y-1">
-            {[['/', 'Home'], ['/menu', 'Menu'], ['/gallery', 'Gallery'], ['/our-reviews', 'Reviews'], ['/admin', 'Admin Panel']].map(([to, label]) => (
-              <Link key={to} to={to} onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
-            ))}
+            {[
+              ['/', 'Home'],
+              ['/#about', 'About'],
+              ['/menu', 'Menu'],
+              ['/gallery', 'Gallery'],
+              ['/our-reviews', 'Reviews'],
+              ['/admin', 'Admin Panel']
+            ].map(([to, label]) => {
+              if (to.startsWith('/#')) {
+                return (
+                  <a key={to} href={to} onClick={(e) => {
+                    setMenuOpen(false);
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                      window.history.pushState(null, '', to);
+                    }
+                  }} className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</a>
+                );
+              }
+              return (
+                <Link key={to} to={to} onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
+              );
+            })}
           </div>
         )}
       </nav>
@@ -326,6 +382,133 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── About Section ── */}
+      <section id="about" className="py-16 relative overflow-hidden bg-gradient-to-br from-white via-orange-50/25 to-rose-50/30 border-t border-orange-100">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-1/2 left-0 w-72 h-72 bg-rose-100/40 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-0 w-64 h-64 bg-orange-100/50 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Column: Photo & Decorative Badges */}
+            <div className="lg:col-span-5 flex justify-center">
+              <AnimatedSection className="relative w-full max-w-[340px] sm:max-w-[400px]">
+                {/* Decorative frames */}
+                <div className="absolute -inset-4 bg-gradient-to-br from-orange-400 to-rose-400 rounded-[2.5rem] opacity-20 blur-lg" />
+                <div className="absolute -inset-1.5 bg-gradient-to-tr from-orange-200 via-rose-200 to-yellow-200 rounded-[2.2rem] opacity-75" />
+                
+                {/* Main Image Frame */}
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/5]">
+                  <img 
+                    src={ownerPhoto} 
+                    alt="Harsh Gajjar" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Subtle vignette layer */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  
+                  {/* Photo Title Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-orange-50 text-center">
+                    <p className="font-extrabold text-gray-800 text-sm sm:text-base">Harsh Gajjar</p>
+                    <p className="text-xs text-orange-600 font-semibold">Founder & Head Baker</p>
+                  </div>
+                </div>
+
+                {/* Floating elements */}
+                <div className="absolute -top-3 -right-3 bg-yellow-400 text-yellow-900 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md rotate-6 animate-[float_4s_ease-in-out_infinite]">
+                  🎓 Student & Baker
+                </div>
+                <div className="absolute -bottom-2 -left-4 bg-orange-700 text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md -rotate-3 animate-[float_5s_ease-in-out_infinite_1.5s]">
+                  👨‍🍳 Baking Coach
+                </div>
+              </AnimatedSection>
+            </div>
+
+            {/* Right Column: Narrative and details */}
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+              <AnimatedSection>
+                <span className="inline-block bg-orange-100 text-orange-700 text-xs font-bold px-4 py-1.5 rounded-full mb-3 uppercase tracking-widest border border-orange-200">
+                  Meet the Baker
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+                  Crafting Sweet Memories <br className="hidden sm:inline"/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-rose-500">
+                    With Passion & Purpose
+                  </span>
+                </h2>
+              </AnimatedSection>
+
+              <AnimatedSection delay={100} className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+                <p>
+                  My baking journey began during my <span className="font-semibold text-orange-700">2nd year of college</span>. 
+                  While studying for my <span className="font-semibold text-gray-800">BE in Computer Engineering</span>, I discovered a deep passion for 
+                  the science and art of baking, starting as a passionate home baker.
+                </p>
+                <p>
+                  Today, I am <span className="font-semibold text-orange-700">pursuing my Master's degree</span> while continuing to run 
+                  Harsh Cake Zone. Balancing the analytical world of algorithms with the creative, hands-on craft of custom cake making keeps my drive and dedication fresh.
+                </p>
+              </AnimatedSection>
+
+              {/* Teaching Classes Highlight Card */}
+              <AnimatedSection delay={200}>
+                <div className="bg-gradient-to-br from-orange-50/60 to-rose-50/50 border border-orange-100 rounded-3xl p-5 sm:p-6 text-left relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  {/* Decorative faint background emoji */}
+                  <div className="absolute right-3 bottom-3 text-7xl opacity-5 pointer-events-none select-none">🏫</div>
+                  
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 shrink-0 rounded-2xl bg-orange-100 flex items-center justify-center text-2xl shadow-inner">
+                      🎓
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-800 text-base mb-1">
+                        Baking Masterclasses & Teaching
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        I love sharing my baking knowledge! I conduct professional-level classes covering everything from the physics of batter rise to the art of frosting. Learn real baking science, tips, and recipes to start your own baking journey.
+                      </p>
+                      
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <span className="bg-white/80 border border-orange-100 text-orange-700 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
+                          🍰 Hands-on Sessions
+                        </span>
+                        <span className="bg-white/80 border border-orange-100 text-orange-700 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
+                          📊 Beginner to Pro
+                        </span>
+                        <span className="bg-white/80 border border-orange-100 text-orange-700 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
+                          📜 Detailed Recipe Booklets
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+
+              {/* Action Buttons */}
+              <AnimatedSection delay={300} className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                <a 
+                  href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="px-5 py-3 bg-orange-700 hover:bg-orange-800 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                >
+                  <WhatsAppIcon /> Join Baking Classes
+                </a>
+                <Link 
+                  to="/gallery" 
+                  className="px-5 py-3 bg-white text-orange-700 border-2 border-orange-200 hover:border-orange-400 font-bold rounded-2xl text-xs sm:text-sm shadow-sm hover:-translate-y-0.5 transition-all"
+                >
+                  🖼️ View Our Gallery
+                </Link>
+              </AnimatedSection>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ── Gallery Preview ── */}
       {images.length > 0 && (
         <section className="py-16 relative overflow-hidden bg-gradient-to-br from-orange-900 via-orange-800 to-rose-800">
@@ -454,9 +637,28 @@ export default function LandingPage() {
             </a>
           </div>
           <div className="flex justify-center gap-5 text-xs mb-5">
-            {[['/', 'Home'], ['/menu', 'Menu'], ['/gallery', 'Gallery'], ['/our-reviews', 'Reviews']].map(([to, label]) => (
-              <Link key={to} to={to} className="hover:text-white transition-colors">{label}</Link>
-            ))}
+            {[
+              ['/', 'Home'],
+              ['/#about', 'About'],
+              ['/menu', 'Menu'],
+              ['/gallery', 'Gallery'],
+              ['/our-reviews', 'Reviews']
+            ].map(([to, label]) => {
+              if (to.startsWith('/#')) {
+                return (
+                  <a key={to} href={to} onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                      window.history.pushState(null, '', to);
+                    }
+                  }} className="hover:text-white transition-colors">{label}</a>
+                );
+              }
+              return (
+                <Link key={to} to={to} className="hover:text-white transition-colors">{label}</Link>
+              );
+            })}
           </div>
           <p className="text-xs text-white/30">© {new Date().getFullYear()} Harsh Cake Zone. All rights reserved.</p>
         </div>

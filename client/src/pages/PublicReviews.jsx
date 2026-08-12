@@ -28,6 +28,7 @@ export default function PublicReviews() {
           </Link>
           <div className="hidden sm:flex items-center gap-1 text-sm font-medium text-gray-600">
             <Link to="/" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Home</Link>
+            <Link to="/#about" className="px-3 py-1.5 hover:text-orange-700 transition-colors">About</Link>
             <Link to="/menu" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Menu</Link>
             <Link to="/gallery" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Gallery</Link>
           </div>
@@ -40,7 +41,12 @@ export default function PublicReviews() {
         </div>
         {menuOpen && (
           <div className="sm:hidden bg-white border-t border-orange-50 px-4 pb-3 space-y-1">
-            {[['/', 'Home'], ['/menu', 'Menu'], ['/gallery', 'Gallery']].map(([to, label]) => (
+            {[
+              ['/', 'Home'],
+              ['/#about', 'About'],
+              ['/menu', 'Menu'],
+              ['/gallery', 'Gallery']
+            ].map(([to, label]) => (
               <Link key={to} to={to} onClick={() => setMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
             ))}

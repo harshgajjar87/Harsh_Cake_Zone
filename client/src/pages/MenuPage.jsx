@@ -77,6 +77,7 @@ export default function MenuPage() {
           </Link>
           <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-600">
             <Link to="/" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Home</Link>
+            <Link to="/#about" className="px-3 py-1.5 hover:text-orange-700 transition-colors">About</Link>
             <Link to="/gallery" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Gallery</Link>
             <Link to="/our-reviews" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Reviews</Link>
             <a href="https://whatsapp.com/channel/0029Vb8TbE7LY6d6hMiCqR2k" target="_blank" rel="noreferrer"
@@ -93,7 +94,12 @@ export default function MenuPage() {
         </div>
         {menuOpen && (
           <div className="sm:hidden bg-white border-t border-orange-50 px-4 pb-3 space-y-1">
-            {[['/', 'Home'], ['/gallery', 'Gallery'], ['/our-reviews', 'Reviews']].map(([to, label]) => (
+            {[
+              ['/', 'Home'],
+              ['/#about', 'About'],
+              ['/gallery', 'Gallery'],
+              ['/our-reviews', 'Reviews']
+            ].map(([to, label]) => (
               <Link key={to} to={to} onClick={() => setMenuOpen(false)}
                 className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700">{label}</Link>
             ))}

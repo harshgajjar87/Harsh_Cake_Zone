@@ -302,6 +302,7 @@ export default function Gallery({ isAdmin = false }) {
             </Link>
             <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
               <Link to="/" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Home</Link>
+              <Link to="/#about" className="px-3 py-1.5 hover:text-orange-700 transition-colors">About</Link>
               <Link to="/menu" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Menu</Link>
               <Link to="/our-reviews" className="px-3 py-1.5 hover:text-orange-700 transition-colors">Reviews</Link>
             </div>
